@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css">
+  <script src="https://d3js.org/d3.v3.min.js"></script>
+  <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+  <style>
+    body { margin:0;position:fixed;top:0;right:0;bottom:0;left:0; }
+    #map{ width:100%; height:800px; }
+    .tooltip{ width: 80px; height: 80px; position: absolute; left: -9999p; }
+    .tooltip > svg{ margin:auto; display: block; }
+  </style>
+</head>
+
+<body>
+  
+  
+  <div id="map"></div>
+  
+  
+  
+  <script>
+    d3.csv("data/phoenix_burger_restaurants.csv", function(error, data){
+        // console.log(data[0]);
+        var points = [];
+        for(var i = 0; i < data.length; i++) {
+            points.push({latlng: [data[i].latitude, data[i].longitude], stars: data[i].stars});
+        }
+    
+        var pointsGroup = L.layerGroup();
+        points.forEach(function(d){
+          
+            // binding data to marker object's option
+            L.marker(d.latlng, { achieve: d.achieve })
+                .on("mouseover", onMouseOver)
+                .on("mouseout", onMouseOut)
+                .addTo(pointsGroup);
+        });
+
+        var layer1 = L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
+                detectRetina: true,
+                attribution: "&copy; " + "<a href='http://openstreetmap.org'>OpenStreetMap</a>" + " Contributors"
+            }),
+            layer2 = L.tileLayer("http://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png", {
+                attribution: "Thunderforest"
+            }),
+            layer3 = L.tileLayer.wms("http://basemap.nationalmap.gov/ArcGIS/services/USGSImageryTopo/MapServer/WMSServer", {
+                layers: "0",
+                format: "image/png",
+                transparent: false,
+                attribution: "USGS"
+            });
+
+        var baseLayers = {
+                "osm": layer1,
+                "thunderforest": layer2
+            },
+            subLayers = { "USGS": layer3, "Points": pointsGroup };
+
+        var map = L.map("map", {
+            center: [33.448376, -112.074036],
+            zoom: 10,
+            layers: [layer1, pointsGroup]
+        });
+
+        L.control.layers(baseLayers, subLayers, {position: "topright"}).addTo(map);
+
+
+
+
+        function onMouseOver(e){
+            var point = map.latLngToContainerPoint(e.latlng);
+            // console.log(e.latlng);
+            // console.log(points);
+            var stars = 0.0;
+            for(var i = 0; i < points.length; i++) {
+                if(points[i].latlng[0] == e.latlng.lat && points[i].latlng[1] == e.latlng.lng) {
+                    stars = points[i].stars;
+                }
+            }
+            // console.log(stars);
+            // console.log(e);
+            var tooltip = d3.select(map.getContainer())
+                .append("div")
+                .attr("class", "tooltip")
+                // Calculating according to marker and tooltip size
+                .style({ left: point.x - 40 + "px", top: point.y - 80 - 41 + "px" })
+                .node();
+            console.log(tooltip);
+            getPie(tooltip, stars);
+        }
+        function onMouseOut(e){
+            d3.select(map.getContainer()).select(".tooltip").remove();
+        }
+        function getPie(node, value){
+            // console.log(value);
+            var size = 70;
+            var arc = d3.svg.arc().outerRadius(size / 2).innerRadius(size / 3),
+                pie = d3.layout.pie().sort(null);
+            d3.select(node).append("svg")
+                .attr({ width: size, height: size })
+                .append("g")
+                .attr("transform", "translate(" + [size / 2, size / 2] + ")")
+                .call(function(s){
+                    s.append("text")
+                     .text(d3.format(".2p")(value))
+                     .style("font", "12px")
+                     .attr({ "text-anchor": "middle", "alignment-baseline": "central" });
+                })
+                .selectAll("path")
+                .data(pie([value, 5.0 - value]))
+                .enter()
+                .append("path")
+                .attr({
+                    d: arc,
+                    fill: function(d,i){ return i ? "gray" : "red"; }
+                });
+        }
+    });
+  </script>
+</body>

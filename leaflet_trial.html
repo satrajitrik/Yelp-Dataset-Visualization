@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+		  integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+		  crossorigin=""/>
+	<style type="text/css">
+		#mapid { 
+			height: 700px; 
+			width: 700px;
+		}
+	</style>
+	<script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+		   	integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+		   	crossorigin="">
+	</script>
+	<script src="scripts/require.js"></script>
+</head>
+<body>
+	<div id="mapid"></div>
+	
+	<script type="text/javascript">
+		
+		var mymap = L.map('mapid').setView([51.505, -0.09], 13);
+
+		var pos_array = [[0, 0], [10, 10], [20, 20], [30, 30]];
+		for(var i = 0; i < pos_array.length; i++) {
+			var marker = L.marker(pos_array[i]).addTo(mymap);
+		}
+
+		L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+	        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+	    }).addTo(mymap);
+
+	    const csv = require(['csv-parser'])
+		const fs = require(['fs'])
+		const results = [];
+
+		fs.createReadStream('data/business.csv')
+	    	.pipe(csv())
+	    	.on('data', (data) => results.push(data))
+	    	.on('end', () => {
+	    	console.log(results);
+	    
+		});
+	</script>
+</body>
