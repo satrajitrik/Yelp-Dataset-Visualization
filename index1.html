@@ -345,6 +345,8 @@
       var starHtml = "";
       var isInt = false;
 
+
+      //This part of code writes html for stars. Full or half based on ratings
       if(stars-Math.floor(stars) == 0){
         isInt = true;
       }
@@ -356,6 +358,9 @@
       if(!isInt){
         starHtml = starHtml + "<span class=\"star half\"></span>";
       }
+
+
+
       d3.select("#resName").html("<span style='color:red;font-weight:bold'>"+nameHtml+"</span><br/>").attr("fill", "red");
       d3.select("#resAddress").html(addressHtml);
       d3.select("#resTimings").html("<span>"+timingHtml+"</span>");
@@ -369,11 +374,6 @@
           stars = points[i].stars;
         }
       }
-      // L.popup()
-      // .setLatLng(e.latlng)
-      // .setContent("<span style='color:red;font-weight:bold'>" + name + "</span><br/><span><b> Rating: </b>" + stars + "</span><br/>")
-      // .openOn(map);
-      console.log(e);
     }
 
     function onMouseOut(e){
@@ -383,9 +383,12 @@
     function clickFunc(p){
       document.getElementById("mySidepanel").style.width = "250px";
       openNav(p);
+
+      //This part of code turns previous restaurant icon back to blue
       if(prev){
         prev.target.setIcon(unactiveIcon);
       }
+      
       isClicked = !isClicked;
       currIcon = activeIcon;
       p.target.setIcon(currIcon);
