@@ -125,11 +125,41 @@
     content:'\2605';
     color: gold;
     position: absolute;
-    margin-left: -20px;
+    margin-left: -22px;
     width: 10px;
     background-color: #D3D3D3;
     overflow: hidden;
   }
+
+  /* tooltip css */
+  <style>
+/* Tooltip container */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+</style>
 
   </style>
 </head>
@@ -238,10 +268,18 @@
       var marker = null;
       points.forEach(function(d){
         marker = L.marker(d.latlng, {icon: currIcon, achieve: d.achieve })
-        .on("mouseover", onMouseOver)
-        .on("mouseout", onMouseOut)
+        //.on("mouseover", onMouseOver)
+        //.on("mouseout", onMouseOut)
         .addTo(pointsGroup)
-        .on("click", clickFunc);
+        .on("click", clickFunc)
+        //marker.bindPopup();
+        .on('mouseover', function (e) {
+            this.bindPopup(popupContent(e));
+            this.openPopup();
+        })
+        marker.on('mouseout', function (e) {
+            this.closePopup();
+        });
       });
 
       var layer1 = L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
@@ -359,25 +397,27 @@
         starHtml = starHtml + "<span class=\"star half\"></span>";
       }
 
-
-
       d3.select("#resName").html("<span style='color:red;font-weight:bold'>"+nameHtml+"</span><br/>").attr("fill", "red");
       d3.select("#resAddress").html(addressHtml);
       d3.select("#resTimings").html("<span>"+timingHtml+"</span>");
       d3.select("#resRatings").html(starHtml);
 
     }
-    function onMouseOver(e){
+    function popupContent(e){
+      console.log(e);
+      var name, stars;
       for(var i = 0; i < points.length; i++) {
         if(points[i].latlng[0] == e.latlng.lat && points[i].latlng[1] == e.latlng.lng) {
           name = points[i].name;
           stars = points[i].stars;
         }
       }
+      var html = "<div><span style='color:red;font-weight:bold'>" + name + "</span><br/>" + "<span><b> Rating: </b>" + stars + "</span><br/></div>";
+      return html;
     }
 
     function onMouseOut(e){
-      d3.select(map.getContainer()).select(".tooltip").remove();
+       d3.select(map.getContainer()).select(".tooltip").remove();
     }
 
     function clickFunc(p){
@@ -388,7 +428,7 @@
       if(prev){
         prev.target.setIcon(unactiveIcon);
       }
-      
+
       isClicked = !isClicked;
       currIcon = activeIcon;
       p.target.setIcon(currIcon);
