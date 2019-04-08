@@ -166,7 +166,7 @@
 <body>
   <div id="map"></div>
   <div id="mySidepanel" class="sidepanel">
-    <a href="javascript:void(0)" class="closebtn" onclick="CloseNav()">&times;</a>
+    <!-- <a href="javascript:void(0)" class="closebtn" onclick="CloseNav()">&times;</a> -->
     <div id="accordion" class="panel-group">
       <div class="panel panel-default">
         <div class="panel-heading">
@@ -268,11 +268,8 @@
       var marker = null;
       points.forEach(function(d){
         marker = L.marker(d.latlng, {icon: currIcon, achieve: d.achieve })
-        //.on("mouseover", onMouseOver)
-        //.on("mouseout", onMouseOut)
         .addTo(pointsGroup)
         .on("click", clickFunc)
-        //marker.bindPopup();
         .on('mouseover', function (e) {
             this.bindPopup(popupContent(e));
             this.openPopup();
