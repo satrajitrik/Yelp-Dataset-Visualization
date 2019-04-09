@@ -95,22 +95,35 @@ def sentiment_calculation(review_text):
         return None
 
 
-df_review['sentiment'] = df_review['text'].apply(sentiment_calculation)
-df_review.sort_values('sentiment',inplace=True, ascending=False)
+df_review['total_sentiment'] = df_review['text'].apply(sentiment_calculation)
+df_review.sort_values('total_sentiment',inplace=True, ascending=False)
 print(df_review.head())
 
 
+with open("../data/positive-words.txt") as f:
+ positive_words = f.read().split()[213:]
 
-#get 3 words after and before filter label
+with open("../data/negative-words.txt") as f:
+    negative_words = f.read().split()[213:]
+
+
+#get 3 words after and before filter label and its sentiments
 for index, row in df_review.iterrows():
-    words = re.findall(r'\w+', str(row['text']))
-    matching = [s for s in words if filter_label in s]
-    if  'pizza' in matching:
-     index = words.index(filter_label)
-     left = words[index - 3:index]
-     right = words[index + 1:index + 4]
-     print(left)
+ words = re.findall(r'\w+', str(row['text']))
+ matching = [s for s in words if filter_label in s]
+ if  'pizza' in matching:
+  indices = words.index(filter_label)
+  left_words = words[indices - 3:indices]
+  right_words = words[indices + 1:indices + 4]
+  positive_score = sum([r in positive_words for r in left_words])
+  positive_score  =positive_score+ sum([r in positive_words for r in right_words])
+  negative_score = sum([r in negative_words for r in left_words])
+  negative_score = negative_score+ sum([r in negative_words for r in right_words])
+  net_score = positive_score - negative_score
+  df_review.at[index,'sentiscore'] = net_score
 
+
+print(df_review.head(5))
 
 
 
