@@ -52,7 +52,7 @@ df_review['text'] = df_review['text'].apply(lambda x: ' '.join([w for w in x.spl
 # stemmer = PorterStemmer()
 # df_review['text'] =df_review['text'].apply(lambda x: [stemmer.stem(i) for i in x]) # stemming
 #
-print(df_review['text'].head())
+
 
 #extract only the sentences with the filter label from review text
 # df_review['text']=df_review['text'].apply(lambda text: [sent for sent in sent_tokenize(text)
@@ -83,7 +83,7 @@ print(df_review['text'].head())
 
 
 #sentiment using textblob
-#output willThe sentiment function of textblob returns polarity, and subjectivity.
+#textblob returns polarity, and subjectivity.
 #Polarity is float which lies in the range of [-1,1] where 1 is positive s and -1 is negative.
 #  Subjectivity refer to personal opinion, emotion etc
 # Subjectivity is also a float which lies in the range of [0,1]
@@ -97,7 +97,7 @@ def sentiment_calculation(review_text):
 
 df_review['total_sentiment'] = df_review['text'].apply(sentiment_calculation)
 df_review.sort_values('total_sentiment',inplace=True, ascending=False)
-print(df_review.head())
+# print(df_review.head())
 
 
 with open("../data/positive-words.txt") as f:
@@ -112,18 +112,25 @@ for index, row in df_review.iterrows():
  words = re.findall(r'\w+', str(row['text']))
  matching = [s for s in words if filter_label in s]
  if  'pizza' in matching:
-  indices = words.index(filter_label)
-  left_words = words[indices - 3:indices]
-  right_words = words[indices + 1:indices + 4]
-  positive_score = sum([r in positive_words for r in left_words])
-  positive_score  =positive_score+ sum([r in positive_words for r in right_words])
-  negative_score = sum([r in negative_words for r in left_words])
-  negative_score = negative_score+ sum([r in negative_words for r in right_words])
+  for wordno, word in enumerate(words):
+   # print(word)
+   if(word== filter_label):
+    # print(word)
+    indices = wordno
+    left_words = words[indices - 3:indices]
+    right_words = words[indices + 1:indices + 4]
+    positive_score = sum([t in positive_words for t in left_words])
+    positive_score  =positive_score+ sum([t in positive_words for t in right_words])
+    negative_score = sum([t in negative_words for t in left_words])
+    negative_score = negative_score+ sum([t in negative_words for t in right_words])
   net_score = positive_score - negative_score
   df_review.at[index,'sentiscore'] = net_score
 
+df_review.sort_values('sentiscore',inplace=True, ascending=False)
+print(df_review.head(10))
 
-print(df_review.head(5))
+
+
 
 
 
