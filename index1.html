@@ -344,13 +344,15 @@
       }
 
       var nameHtml = name;
-      var addressHtml = address;
+      var addressHtml = '<span style="word-wrap:break-word">'+address+'</span>';
       var timingHtml  = hours;
       var starHtml = "";
       var isInt = false;
 
 
       //This part of code writes html for stars. Full or half based on ratings
+
+      //checks if star value is full or x.half
       if(stars-Math.floor(stars) == 0){
         isInt = true;
       }
