@@ -7,7 +7,7 @@ import pandas as pd
 from itertools import *
 from matplotlib import rcParams
 rcParams.update({'figure.autolayout': True})
-import  re
+import re
 import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import wordpunct_tokenize
@@ -96,10 +96,10 @@ df_review.sort_values('total_sentiment',inplace=True, ascending=False)
 
 
 # get positive and negative word corpus
-with open("../data/positive-words.txt") as f:
+with open("../data/positive-words.txt", encoding="ISO-8859-1") as f:
  positive_words = f.read().split()[213:]
 
-with open("../data/negative-words.txt") as f:
+with open("../data/negative-words.txt", encoding="ISO-8859-1") as f:
     negative_words = f.read().split()[213:]
 
 
@@ -122,7 +122,7 @@ for index, row in df_review.iterrows():
   df_review.at[index,'sentiscore'] = net_score
 
 df_review.sort_values('sentiscore',inplace=True, ascending=False)
-print(df_review.head(10))
+print(df_review.head(100))
 
 
 
