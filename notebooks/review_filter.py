@@ -7,7 +7,7 @@ import pandas as pd
 from itertools import *
 from matplotlib import rcParams
 rcParams.update({'figure.autolayout': True})
-
+import  re
 import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import wordpunct_tokenize
@@ -15,36 +15,32 @@ from nltk.tokenize import sent_tokenize
 import numpy as np
 import textblob as tb
 
-import  re
-REPLACE_NO_SPACE = re.compile("[.;:!\'?,\"()\[\]]")
-REPLACE_WITH_SPACE = re.compile("(<br\s*/><br\s*/>)|(\-)|(\/)")
+
 
 
 filter_label="pizza"
+NO_SPACE = re.compile("[.;:!\'?,\"()\[\]]")
+WITH_SPACE = re.compile("(<br\s*/><br\s*/>)|(\-)|(\/)")
+
 
 yelp = pd.ExcelFile('../data/final_review1.xlsx')
 df_review=yelp.parse('9.6K')
 
-# filter review based on filter
+# filter review based on category
 df_review=df_review[df_review['text'].str.contains(filter_label)]
-
-#print(df_review.head(5))
 
 review_list=df_review['text']
 #convert to lower
-review_list = [REPLACE_NO_SPACE.sub("", line.lower()) for line in review_list]
-review_list = [REPLACE_WITH_SPACE.sub(" ", line) for line in review_list]
+review_list = [NO_SPACE.sub("", line.lower()) for line in review_list]
+review_list = [WITH_SPACE.sub(" ", line) for line in review_list]
 df_review['text']=review_list
-
-
 
 
 # remove special characters, numbers, punctuations
 df_review['text'] = df_review['text'].str.replace("[^a-zA-Z#]", " ")
 
-
 #remove words less than 3 letters
-df_review['text'] = df_review['text'].apply(lambda x: ' '.join([w for w in x.split() if len(w)>3]))
+df_review['text'] = df_review['text'].apply(lambda x: ' '.join([word for word in x.split() if len(word)>3]))
 # print(df_review['text'].head())
 
 #remove stemming
@@ -97,9 +93,9 @@ def sentiment_calculation(review_text):
 
 df_review['total_sentiment'] = df_review['text'].apply(sentiment_calculation)
 df_review.sort_values('total_sentiment',inplace=True, ascending=False)
-# print(df_review.head())
 
 
+# get positive and negative word corpus
 with open("../data/positive-words.txt") as f:
  positive_words = f.read().split()[213:]
 
@@ -107,7 +103,7 @@ with open("../data/negative-words.txt") as f:
     negative_words = f.read().split()[213:]
 
 
-#get 3 words after and before filter label and its sentiments
+#get 3 words after and before category label and its sentiments
 for index, row in df_review.iterrows():
  words = re.findall(r'\w+', str(row['text']))
  matching = [s for s in words if filter_label in s]
@@ -115,7 +111,6 @@ for index, row in df_review.iterrows():
   for wordno, word in enumerate(words):
    # print(word)
    if(word== filter_label):
-    # print(word)
     indices = wordno
     left_words = words[indices - 3:indices]
     right_words = words[indices + 1:indices + 4]
