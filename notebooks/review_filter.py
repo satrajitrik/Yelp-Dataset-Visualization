@@ -107,7 +107,7 @@ with open("../data/negative-words.txt", encoding="ISO-8859-1") as f:
 for index, row in df_review.iterrows():
  words = re.findall(r'\w+', str(row['text']))
  matching = [s for s in words if filter_label in s]
- if  'pizza' in matching:
+ if  filter_label in matching:
   for wordno, word in enumerate(words):
    # print(word)
    if(word== filter_label):
