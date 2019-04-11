@@ -2,7 +2,7 @@
 <head>
   <meta charset="utf-8">
   <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css">
-  <script src="https://d3js.org/d3.v3.min.js"></script>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
   <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
@@ -133,6 +133,11 @@
   </style>
 </head>
 <body>
+  <div class="btn-group">
+        <button type="button" id="all" class="btn btn-success">All</button>
+        <button type="button" id="mexican" class="btn btn-primary">Mexican</button>
+        <button type="button" id="italian" class="btn btn-danger">Italian</button>
+  </div>
   <div id="map"></div>
   <div id="mySidepanel" class="sidepanel" style="width:0px;">
     <a href="javascript:void(0)" class="closebtn" onclick="CloseNav()">&times;</a>
@@ -203,202 +208,247 @@
   function CloseNav() {
     document.getElementById("mySidepanel").style.width = "0";
   }
-  d3.csv("https://dl.dropboxusercontent.com/s/nxf603sa3qsm1om/phoenix_burger_restaurants.csv?dl=1", function(error, data){
-    document.getElementById("mySidepanel").style.width = "250px";
-    var isClicked = false;
-    var points = [];
-    for(var i = 0; i < data.length; i++) {
-      points.push(
-        {
-          name: data[i].name,
-          address: data[i].address,
-          hours: data[i].hours,
-          latlng: [data[i].latitude, data[i].longitude],
-          stars: data[i].stars
-        });
-      }
-      var unactiveIcon = new L.Icon({
-        iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png',
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        shadowSize: [41, 41]
-      });
-      var activeIcon = new L.Icon({
-        iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        shadowSize: [41, 41]
-      });
-      var currIcon = unactiveIcon;
-      var pointsGroup = L.layerGroup();
-      var marker = null;
-      points.forEach(function(d){
-        marker = L.marker(d.latlng, {icon: currIcon, achieve: d.achieve })
-        .addTo(pointsGroup)
-        .on("click", clickFunc)
-        .on('mouseover', function (e) {
-            this.bindPopup(popupContent(e));
-            this.openPopup();
-        })
-        marker.on('mouseout', function (e) {
-            this.closePopup();
-        });
-      });
-
-      var layer1 = L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
-        detectRetina: true,
-        attribution: "&copy; " + "<a href='http://openstreetmap.org'>OpenStreetMap</a>" + " Contributors"
-      }
-    );
-
-    var baseLayers = {
-      "osm": layer1
-    };
-
-    var map = L.map("map", {
-      center: [33.448376, -112.074036],
-      zoom: 10,
-      layers: [layer1, pointsGroup]
-    });
-
-    //L.control.layers(baseLayers, subLayers, {position: "topright"}).addTo(map);
-
-    function openNav(e){
-      var point = map.latLngToContainerPoint(e.latlng);
-      var stars = 0.0;
-      var name = '';
-      var hours = 'NA';
-      var address = 'NA';
-      var hoursdict = {};
-      for(var i = 0; i < points.length; i++) {
-        if(points[i].latlng[0] == e.latlng.lat && points[i].latlng[1] == e.latlng.lng) {
-          name = points[i].name;
-          if(points[i].address != undefined) {
-            address = points[i].address;
-          }
-          stars = points[i].stars;
-          if(points[i].hours != '') {
-            hours = points[i].hours;
-          }
-        }
-      }
-
-      if(hours != 'NA') {
-        hours = hours.replace("{", "");
-        hours = hours.replace("}", "");
-        hours = hours.split(",");
-        for(var i = 0; i < hours.length; i++) {
-          if(hours[i].includes('Monday')) {
-            hoursdict['Monday'] = hours[i].split(": ")[1].split("'")[1];
-          }else if(hours[i].includes('Tuesday')) {
-            hoursdict['Tuesday'] = hours[i].split(": ")[1].split("'")[1];
-          }else if(hours[i].includes('Wednesday')) {
-            hoursdict['Wednesday'] = hours[i].split(": ")[1].split("'")[1];
-          }else if(hours[i].includes('Thursday')) {
-            hoursdict['Thursday'] = hours[i].split(": ")[1].split("'")[1];
-          }else if(hours[i].includes('Friday')) {
-            hoursdict['Friday'] = hours[i].split(": ")[1].split("'")[1];
-          }else if(hours[i].includes('Saturday')) {
-            hoursdict['Saturday'] = hours[i].split(": ")[1].split("'")[1];
-          }else {
-            hoursdict['Sunday'] = hours[i].split(": ")[1].split("'")[1];
-          }
-        }
-        hours = "<table>" +
-        "<tr>" +
-        "<th>Days</th>" +
-        "<th>Hours</th>" +
-        "</tr>" +
-        "<tr>" +
-        "<td>Monday</td>" +
-        "<td>" + hoursdict['Monday'] + "</td>" +
-        "</tr>" +
-        "<tr>" +
-        "<td>Tuesday</td>" +
-        "<td>" + hoursdict['Tuesday'] + "</td>" +
-        "</tr>" +
-        "<tr>" +
-        "<td>Wednesday</td>" +
-        "<td>" + hoursdict['Wednesday'] + "</td>" +
-        "</tr>" +
-        "<tr>" +
-        "<td>Thursday</td>" +
-        "<td>" + hoursdict['Thursday'] + "</td>" +
-        "</tr>" +
-        "<tr>" +
-        "<td>Friday</td>" +
-        "<td>" + hoursdict['Friday'] + "</td>" +
-        "</tr>" +
-        "<tr>" +
-        "<td>Saturday</td>" +
-        "<td>" + hoursdict['Saturday'] + "</td>" +
-        "</tr>" +
-        "<tr>" +
-        "<td>Sunday</td>" +
-        "<td>" + hoursdict['Sunday'] + "</td>" +
-        "</tr>" +
-        "</table>";
-      }
-
-      var nameHtml = name;
-      var addressHtml = address;
-      var timingHtml  = hours;
-      var starHtml = "";
-      var isInt = false;
-
-
-      //This part of code writes html for stars. Full or half based on ratings
-      if(stars-Math.floor(stars) == 0){
-        isInt = true;
-      }
-      var i = 1
-      for(; i <= Math.floor(stars); i++){
-        starHtml = starHtml + "<span class=\"star on\"></span>";
-      }
-      i--;
-      if(!isInt){
-        starHtml = starHtml + "<span class=\"star half\"></span>";
-      }
-
-      d3.select("#resName").html("<span style='color:red;font-weight:bold'>"+nameHtml+"</span><br/>").attr("fill", "red");
-      d3.select("#resAddress").html(addressHtml);
-      d3.select("#resTimings").html("<span>"+timingHtml+"</span>");
-      d3.select("#resRatings").html(starHtml);
-
-    }
-    function popupContent(e){
-      console.log(e);
-      var name, stars;
-      for(var i = 0; i < points.length; i++) {
-        if(points[i].latlng[0] == e.latlng.lat && points[i].latlng[1] == e.latlng.lng) {
-          name = points[i].name;
-          stars = points[i].stars;
-        }
-      }
-      var html = "<div><span style='color:red;font-weight:bold'>" + name + "</span><br/>" + "<span><b> Rating: </b>" + stars + "</span><br/></div>";
-      return html;
-    }
-
-    function onMouseOut(e){
-       d3.select(map.getContainer()).select(".tooltip").remove();
-    }
-
-    function clickFunc(p){
-      document.getElementById("mySidepanel").style.width = "250px";
-      openNav(p);
-      //This part of code turns previous restaurant icon back to blue
-      if(prev){
-        prev.target.setIcon(unactiveIcon);
-      }
-
-      isClicked = !isClicked;
-      currIcon = activeIcon;
-      p.target.setIcon(currIcon);
-      prev = p;
-    }
+  var layer1 = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+                  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+                  subdomains: 'abcd',
+                  maxZoom: 19
+  }),
+  layer2 = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    subdomains: 'abcd',
+    maxZoom: 19
   });
+
+  var baseLayers = {
+    "light": layer1,
+    "dark": layer2
+  };
+  var pointsGroup = L.layerGroup();
+  // console.log(pointsGroup);
+  var map = L.map("map", {
+    center: [33.448376, -112.074036],
+    zoom: 10,
+    layers: layer1
+  });
+
+  L.control.layers(baseLayers, {position: "topleft"}).addTo(map);
+
+  var unactiveIcon = new L.Icon({
+              iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png',
+              iconSize: [25, 41],
+              iconAnchor: [12, 41],
+              popupAnchor: [1, -34],
+              shadowSize: [41, 41]
+            });
+  var activeIcon = new L.Icon({
+              iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+              shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+              iconSize: [25, 41],
+              iconAnchor: [12, 41],
+              popupAnchor: [1, -34],
+              shadowSize: [41, 41]
+            });
+  Promise.all([
+      d3.csv("data/top_10_mexican_restaurants.csv"),
+      d3.csv("data/top_10_italian_restaurants.csv"),
+    ]).then(function(files) {
+        document.getElementById("mySidepanel").style.width = "250px";
+        var data = null;
+        $("#all").click(function() {
+            // map.addLayer(others)
+            // map.removeLayer(cafes)
+        });
+        $("#mexican").click(function() {
+            data = files[0]
+            // console.log(pointsGroup);
+            // pointsGroup = null;
+            // map.removeLayer(pointsGroup);
+            getAll(data);
+        });
+        $("#italian").click(function() {
+            data = files[1]
+            // console.log(pointsGroup);
+            // pointsGroup = null;
+            // map.removeLayer(pointsGroup);
+            getAll(data);
+        });
+        function getAll(data) {
+          // console.log(data);
+          // var data = files[0];
+          var isClicked = false;
+          var points = [];
+          for(var i = 0; i < data.length; i++) {
+            points.push(
+              {
+                name: data[i].name,
+                address: data[i].address,
+                hours: data[i].hours,
+                latlng: [data[i].latitude, data[i].longitude],
+                stars: data[i].stars
+              });
+            }
+            
+            var currIcon = unactiveIcon;
+            // console.log(pointsGroup);
+            
+            var marker = null;
+            map['_layers'] = null;
+            console.log(map);
+            pointsGroup = L.layerGroup();
+            map['_layers'] = pointsGroup;
+
+            points.forEach(function(d){
+              marker = L.marker(d.latlng, {icon: currIcon, achieve: d.achieve })
+              .addTo(pointsGroup)
+              .on("click", clickFunc)
+              .on('mouseover', function (e) {
+                  this.bindPopup(popupContent(e));
+                  this.openPopup();
+              })
+              marker.on('mouseout', function (e) {
+                  this.closePopup();
+              });
+            });
+            map.addLayer(pointsGroup);
+
+          function openNav(e){
+            var point = map.latLngToContainerPoint(e.latlng);
+            var stars = 0.0;
+            var name = '';
+            var hours = 'NA';
+            var address = 'NA';
+            var hoursdict = {};
+            for(var i = 0; i < points.length; i++) {
+              if(points[i].latlng[0] == e.latlng.lat && points[i].latlng[1] == e.latlng.lng) {
+                name = points[i].name;
+                if(points[i].address != undefined) {
+                  address = points[i].address;
+                }
+                stars = points[i].stars;
+                if(points[i].hours != '') {
+                  hours = points[i].hours;
+                }
+              }
+            }
+
+            if(hours != 'NA') {
+              hours = hours.replace("{", "");
+              hours = hours.replace("}", "");
+              hours = hours.split(",");
+              for(var i = 0; i < hours.length; i++) {
+                if(hours[i].includes('Monday')) {
+                  hoursdict['Monday'] = hours[i].split(": ")[1].split("'")[1];
+                }else if(hours[i].includes('Tuesday')) {
+                  hoursdict['Tuesday'] = hours[i].split(": ")[1].split("'")[1];
+                }else if(hours[i].includes('Wednesday')) {
+                  hoursdict['Wednesday'] = hours[i].split(": ")[1].split("'")[1];
+                }else if(hours[i].includes('Thursday')) {
+                  hoursdict['Thursday'] = hours[i].split(": ")[1].split("'")[1];
+                }else if(hours[i].includes('Friday')) {
+                  hoursdict['Friday'] = hours[i].split(": ")[1].split("'")[1];
+                }else if(hours[i].includes('Saturday')) {
+                  hoursdict['Saturday'] = hours[i].split(": ")[1].split("'")[1];
+                }else {
+                  hoursdict['Sunday'] = hours[i].split(": ")[1].split("'")[1];
+                }
+              }
+              hours = "<table>" +
+              "<tr>" +
+              "<th>Days</th>" +
+              "<th>Hours</th>" +
+              "</tr>" +
+              "<tr>" +
+              "<td>Monday</td>" +
+              "<td>" + hoursdict['Monday'] + "</td>" +
+              "</tr>" +
+              "<tr>" +
+              "<td>Tuesday</td>" +
+              "<td>" + hoursdict['Tuesday'] + "</td>" +
+              "</tr>" +
+              "<tr>" +
+              "<td>Wednesday</td>" +
+              "<td>" + hoursdict['Wednesday'] + "</td>" +
+              "</tr>" +
+              "<tr>" +
+              "<td>Thursday</td>" +
+              "<td>" + hoursdict['Thursday'] + "</td>" +
+              "</tr>" +
+              "<tr>" +
+              "<td>Friday</td>" +
+              "<td>" + hoursdict['Friday'] + "</td>" +
+              "</tr>" +
+              "<tr>" +
+              "<td>Saturday</td>" +
+              "<td>" + hoursdict['Saturday'] + "</td>" +
+              "</tr>" +
+              "<tr>" +
+              "<td>Sunday</td>" +
+              "<td>" + hoursdict['Sunday'] + "</td>" +
+              "</tr>" +
+              "</table>";
+            }
+
+            var nameHtml = name;
+            var addressHtml = address;
+            var timingHtml  = hours;
+            var starHtml = "";
+            var isInt = false;
+
+
+            //This part of code writes html for stars. Full or half based on ratings
+            if(stars-Math.floor(stars) == 0){
+              isInt = true;
+            }
+            var i = 1
+            for(; i <= Math.floor(stars); i++){
+              starHtml = starHtml + "<span class=\"star on\"></span>";
+            }
+            i--;
+            if(!isInt){
+              starHtml = starHtml + "<span class=\"star half\"></span>";
+            }
+
+            d3.select("#resName").html("<span style='color:red;font-weight:bold'>"+nameHtml+"</span><br/>").attr("fill", "red");
+            d3.select("#resAddress").html(addressHtml);
+            d3.select("#resTimings").html("<span>"+timingHtml+"</span>");
+            d3.select("#resRatings").html(starHtml);
+
+          }
+          function popupContent(e){
+            // console.log(e);
+            var name, stars;
+            for(var i = 0; i < points.length; i++) {
+              if(points[i].latlng[0] == e.latlng.lat && points[i].latlng[1] == e.latlng.lng) {
+                name = points[i].name;
+                stars = points[i].stars;
+              }
+            }
+            var html = "<div><span style='color:red;font-weight:bold'>" + name + "</span><br/>" + "<span><b> Rating: </b>" + stars + "</span><br/></div>";
+            return html;
+          }
+
+          function onMouseOut(e){
+             d3.select(map.getContainer()).select(".tooltip").remove();
+          }
+
+          function clickFunc(p){
+            document.getElementById("mySidepanel").style.width = "250px";
+            openNav(p);
+            //This part of code turns previous restaurant icon back to blue
+            if(prev){
+              prev.target.setIcon(unactiveIcon);
+            }
+
+            isClicked = !isClicked;
+            currIcon = activeIcon;
+            p.target.setIcon(currIcon);
+            prev = p;
+          }
+          }
+        
+      }).catch(function(err) {
+        // handle error here
+    });
+  
 </script>
 </body>
