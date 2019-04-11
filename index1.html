@@ -259,22 +259,7 @@
             // map.removeLayer(cafes)
         });
         $("#mexican").click(function() {
-            data = files[0]
-            // console.log(pointsGroup);
-            // pointsGroup = null;
-            // map.removeLayer(pointsGroup);
-            getAll(data);
-        });
-        $("#italian").click(function() {
-            data = files[1]
-            // console.log(pointsGroup);
-            // pointsGroup = null;
-            // map.removeLayer(pointsGroup);
-            getAll(data);
-        });
-        function getAll(data) {
-          // console.log(data);
-          // var data = files[0];
+          data = files[0];
           var isClicked = false;
           var points = [];
           for(var i = 0; i < data.length; i++) {
@@ -287,13 +272,13 @@
                 stars: data[i].stars
               });
             }
-            
+            map.removeLayer(pointsGroup);
             var currIcon = unactiveIcon;
             // console.log(pointsGroup);
             
             var marker = null;
             map['_layers'] = null;
-            console.log(map);
+            // console.log(map);
             pointsGroup = L.layerGroup();
             map['_layers'] = pointsGroup;
 
@@ -444,7 +429,188 @@
             p.target.setIcon(currIcon);
             prev = p;
           }
+            // getAll(data);
+        });
+        $("#italian").click(function() {
+          data = files[1];
+          var isClicked = false;
+          var points = [];
+          for(var i = 0; i < data.length; i++) {
+            points.push(
+              {
+                name: data[i].name,
+                address: data[i].address,
+                hours: data[i].hours,
+                latlng: [data[i].latitude, data[i].longitude],
+                stars: data[i].stars
+              });
+            }
+            
+            var currIcon = unactiveIcon;
+            // console.log(pointsGroup);
+            map.removeLayer(pointsGroup);
+            var marker = null;
+            map['_layers'] = null;
+            // console.log(map);
+            pointsGroup = L.layerGroup();
+            map['_layers'] = pointsGroup;
+
+            points.forEach(function(d){
+              marker = L.marker(d.latlng, {icon: currIcon, achieve: d.achieve })
+              .addTo(pointsGroup)
+              .on("click", clickFunc)
+              .on('mouseover', function (e) {
+                  this.bindPopup(popupContent(e));
+                  this.openPopup();
+              })
+              marker.on('mouseout', function (e) {
+                  this.closePopup();
+              });
+            });
+            map.addLayer(pointsGroup);
+
+          function openNav(e){
+            var point = map.latLngToContainerPoint(e.latlng);
+            var stars = 0.0;
+            var name = '';
+            var hours = 'NA';
+            var address = 'NA';
+            var hoursdict = {};
+            for(var i = 0; i < points.length; i++) {
+              if(points[i].latlng[0] == e.latlng.lat && points[i].latlng[1] == e.latlng.lng) {
+                name = points[i].name;
+                if(points[i].address != undefined) {
+                  address = points[i].address;
+                }
+                stars = points[i].stars;
+                if(points[i].hours != '') {
+                  hours = points[i].hours;
+                }
+              }
+            }
+
+            if(hours != 'NA') {
+              hours = hours.replace("{", "");
+              hours = hours.replace("}", "");
+              hours = hours.split(",");
+              for(var i = 0; i < hours.length; i++) {
+                if(hours[i].includes('Monday')) {
+                  hoursdict['Monday'] = hours[i].split(": ")[1].split("'")[1];
+                }else if(hours[i].includes('Tuesday')) {
+                  hoursdict['Tuesday'] = hours[i].split(": ")[1].split("'")[1];
+                }else if(hours[i].includes('Wednesday')) {
+                  hoursdict['Wednesday'] = hours[i].split(": ")[1].split("'")[1];
+                }else if(hours[i].includes('Thursday')) {
+                  hoursdict['Thursday'] = hours[i].split(": ")[1].split("'")[1];
+                }else if(hours[i].includes('Friday')) {
+                  hoursdict['Friday'] = hours[i].split(": ")[1].split("'")[1];
+                }else if(hours[i].includes('Saturday')) {
+                  hoursdict['Saturday'] = hours[i].split(": ")[1].split("'")[1];
+                }else {
+                  hoursdict['Sunday'] = hours[i].split(": ")[1].split("'")[1];
+                }
+              }
+              hours = "<table>" +
+              "<tr>" +
+              "<th>Days</th>" +
+              "<th>Hours</th>" +
+              "</tr>" +
+              "<tr>" +
+              "<td>Monday</td>" +
+              "<td>" + hoursdict['Monday'] + "</td>" +
+              "</tr>" +
+              "<tr>" +
+              "<td>Tuesday</td>" +
+              "<td>" + hoursdict['Tuesday'] + "</td>" +
+              "</tr>" +
+              "<tr>" +
+              "<td>Wednesday</td>" +
+              "<td>" + hoursdict['Wednesday'] + "</td>" +
+              "</tr>" +
+              "<tr>" +
+              "<td>Thursday</td>" +
+              "<td>" + hoursdict['Thursday'] + "</td>" +
+              "</tr>" +
+              "<tr>" +
+              "<td>Friday</td>" +
+              "<td>" + hoursdict['Friday'] + "</td>" +
+              "</tr>" +
+              "<tr>" +
+              "<td>Saturday</td>" +
+              "<td>" + hoursdict['Saturday'] + "</td>" +
+              "</tr>" +
+              "<tr>" +
+              "<td>Sunday</td>" +
+              "<td>" + hoursdict['Sunday'] + "</td>" +
+              "</tr>" +
+              "</table>";
+            }
+
+            var nameHtml = name;
+            var addressHtml = address;
+            var timingHtml  = hours;
+            var starHtml = "";
+            var isInt = false;
+
+
+            //This part of code writes html for stars. Full or half based on ratings
+            if(stars-Math.floor(stars) == 0){
+              isInt = true;
+            }
+            var i = 1
+            for(; i <= Math.floor(stars); i++){
+              starHtml = starHtml + "<span class=\"star on\"></span>";
+            }
+            i--;
+            if(!isInt){
+              starHtml = starHtml + "<span class=\"star half\"></span>";
+            }
+
+            d3.select("#resName").html("<span style='color:red;font-weight:bold'>"+nameHtml+"</span><br/>").attr("fill", "red");
+            d3.select("#resAddress").html(addressHtml);
+            d3.select("#resTimings").html("<span>"+timingHtml+"</span>");
+            d3.select("#resRatings").html(starHtml);
+
           }
+          function popupContent(e){
+            // console.log(e);
+            var name, stars;
+            for(var i = 0; i < points.length; i++) {
+              if(points[i].latlng[0] == e.latlng.lat && points[i].latlng[1] == e.latlng.lng) {
+                name = points[i].name;
+                stars = points[i].stars;
+              }
+            }
+            var html = "<div><span style='color:red;font-weight:bold'>" + name + "</span><br/>" + "<span><b> Rating: </b>" + stars + "</span><br/></div>";
+            return html;
+          }
+
+          function onMouseOut(e){
+             d3.select(map.getContainer()).select(".tooltip").remove();
+          }
+
+          function clickFunc(p){
+            document.getElementById("mySidepanel").style.width = "250px";
+            openNav(p);
+            //This part of code turns previous restaurant icon back to blue
+            if(prev){
+              prev.target.setIcon(unactiveIcon);
+            }
+
+            isClicked = !isClicked;
+            currIcon = activeIcon;
+            p.target.setIcon(currIcon);
+            prev = p;
+          }
+          // getAll(data);
+        });
+        
+
+
+        // Can be used later
+        function getAll(data) {
+          
+        }
         
       }).catch(function(err) {
         // handle error here
