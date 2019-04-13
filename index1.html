@@ -2,8 +2,12 @@
 <head>
   <meta charset="utf-8">
   <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css">
+  <link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/MarkerCluster.css" />
+  <link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/MarkerCluster.Default.css" />
+ 
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+  <script type='text/javascript' src='http://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/leaflet.markercluster.js'></script>
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -230,6 +234,7 @@
     "Detailed": layer2
   };
   var pointsGroup = L.layerGroup();
+  var markerClusters = new L.markerClusterGroup();
   var map = L.map("map", {
     center: [33.448376, -112.074036],
     zoom: 10,
@@ -383,7 +388,6 @@
     d3.csv("data/top_10_salad_restaurants.csv"),
   ]).then(function(files) {
       document.getElementById("mySidepanel").style.width = "250px";
-      // var data = null;
       var data = files[0];
       for(var i = 1; i < files.length; i++) {
         data = data.concat(files[i]);
@@ -400,12 +404,13 @@
             stars: data[i].stars
           });
       }
-      map.removeLayer(pointsGroup);
+      map.removeLayer(markerClusters);
       var currIcon = unactiveIcon;
       
       var marker = null;
       pointsGroup = L.layerGroup();
-
+      markerClusters = new L.markerClusterGroup();
+ 
       points.forEach(function(d){
         marker = L.marker(d.latlng, {icon: currIcon, achieve: d.achieve })
         .addTo(pointsGroup)
@@ -413,12 +418,13 @@
         .on('mouseover', function (e) {
             this.bindPopup(popupContent(e, points));
             this.openPopup();
-        })
+        });
+        markerClusters.addLayer(marker);
         marker.on('mouseout', function (e) {
             this.closePopup();
         });
       });
-      map.addLayer(pointsGroup);
+      map.addLayer(markerClusters);
       
       function clickFunc(p){
         document.getElementById("mySidepanel").style.width = "250px";
@@ -450,11 +456,12 @@
               stars: data[i].stars
             });
         }
-        map.removeLayer(pointsGroup);
+        map.removeLayer(markerClusters);
         var currIcon = unactiveIcon;
         
         var marker = null;
         pointsGroup = L.layerGroup();
+        markerClusters = new L.markerClusterGroup();
 
         points.forEach(function(d){
           marker = L.marker(d.latlng, {icon: currIcon, achieve: d.achieve })
@@ -463,12 +470,13 @@
           .on('mouseover', function (e) {
               this.bindPopup(popupContent(e, points));
               this.openPopup();
-          })
+          });
+          markerClusters.addLayer(marker);
           marker.on('mouseout', function (e) {
               this.closePopup();
           });
         });
-        map.addLayer(pointsGroup);
+        map.addLayer(markerClusters);
         
         function clickFunc(p){
           document.getElementById("mySidepanel").style.width = "250px";
@@ -498,11 +506,12 @@
               stars: data[i].stars
             });
           }
-        map.removeLayer(pointsGroup);
+        map.removeLayer(markerClusters);
         var currIcon = unactiveIcon;
         
         var marker = null;
         pointsGroup = L.layerGroup();
+        markerClusters = new L.markerClusterGroup();
 
         points.forEach(function(d){
           marker = L.marker(d.latlng, {icon: currIcon, achieve: d.achieve })
@@ -511,12 +520,13 @@
           .on('mouseover', function (e) {
               this.bindPopup(popupContent(e, points));
               this.openPopup();
-          })
+          });
+          markerClusters.addLayer(marker);
           marker.on('mouseout', function (e) {
               this.closePopup();
           });
         });
-        map.addLayer(pointsGroup);
+        map.addLayer(markerClusters);
         
         function clickFunc(p){
           document.getElementById("mySidepanel").style.width = "250px";
@@ -546,25 +556,27 @@
               stars: data[i].stars
             });
           }
-          map.removeLayer(pointsGroup);
-          var currIcon = unactiveIcon;
+        map.removeLayer(markerClusters);
+        var currIcon = unactiveIcon;
 
-          var marker = null;
-          pointsGroup = L.layerGroup();
+        var marker = null;
+        pointsGroup = L.layerGroup();
+        markerClusters = new L.markerClusterGroup();
 
-          points.forEach(function(d){
-            marker = L.marker(d.latlng, {icon: currIcon, achieve: d.achieve })
-            .addTo(pointsGroup)
-            .on("click", clickFunc)
-            .on('mouseover', function (e) {
-                this.bindPopup(popupContent(e, points));
-                this.openPopup();
-            })
-            marker.on('mouseout', function (e) {
-                this.closePopup();
-            });
+        points.forEach(function(d){
+          marker = L.marker(d.latlng, {icon: currIcon, achieve: d.achieve })
+          .addTo(pointsGroup)
+          .on("click", clickFunc)
+          .on('mouseover', function (e) {
+              this.bindPopup(popupContent(e, points));
+              this.openPopup();
           });
-          map.addLayer(pointsGroup);
+          markerClusters.addLayer(marker);
+          marker.on('mouseout', function (e) {
+              this.closePopup();
+          });
+        });
+        map.addLayer(markerClusters);
 
         function clickFunc(p){
           document.getElementById("mySidepanel").style.width = "250px";
@@ -593,26 +605,28 @@
               latlng: [data[i].latitude, data[i].longitude],
               stars: data[i].stars
             });
-          }
-          map.removeLayer(pointsGroup);
-          var currIcon = unactiveIcon;
+        }
+        map.removeLayer(markerClusters);
+        var currIcon = unactiveIcon;
 
-          var marker = null;
-          pointsGroup = L.layerGroup();
+        var marker = null;
+        pointsGroup = L.layerGroup();
+        markerClusters = new L.markerClusterGroup();
 
-          points.forEach(function(d){
-            marker = L.marker(d.latlng, {icon: currIcon, achieve: d.achieve })
-            .addTo(pointsGroup)
-            .on("click", clickFunc)
-            .on('mouseover', function (e) {
-                this.bindPopup(popupContent(e, points));
-                this.openPopup();
-            })
-            marker.on('mouseout', function (e) {
-                this.closePopup();
-            });
+        points.forEach(function(d){
+          marker = L.marker(d.latlng, {icon: currIcon, achieve: d.achieve })
+          .addTo(pointsGroup)
+          .on("click", clickFunc)
+          .on('mouseover', function (e) {
+              this.bindPopup(popupContent(e, points));
+              this.openPopup();
           });
-          map.addLayer(pointsGroup);
+          markerClusters.addLayer(marker);
+          marker.on('mouseout', function (e) {
+              this.closePopup();
+          });
+        });
+        map.addLayer(markerClusters);
 
         function clickFunc(p){
           document.getElementById("mySidepanel").style.width = "250px";
@@ -641,26 +655,28 @@
               latlng: [data[i].latitude, data[i].longitude],
               stars: data[i].stars
             });
-          }
-          map.removeLayer(pointsGroup);
-          var currIcon = unactiveIcon;
+        }
+        map.removeLayer(markerClusters);
+        var currIcon = unactiveIcon;
 
-          var marker = null;
-          pointsGroup = L.layerGroup();
+        var marker = null;
+        pointsGroup = L.layerGroup();
+        markerClusters = new L.markerClusterGroup();
 
-          points.forEach(function(d){
-            marker = L.marker(d.latlng, {icon: currIcon, achieve: d.achieve })
-            .addTo(pointsGroup)
-            .on("click", clickFunc)
-            .on('mouseover', function (e) {
-                this.bindPopup(popupContent(e, points));
-                this.openPopup();
-            })
-            marker.on('mouseout', function (e) {
-                this.closePopup();
-            });
+        points.forEach(function(d){
+          marker = L.marker(d.latlng, {icon: currIcon, achieve: d.achieve })
+          .addTo(pointsGroup)
+          .on("click", clickFunc)
+          .on('mouseover', function (e) {
+              this.bindPopup(popupContent(e, points));
+              this.openPopup();
           });
-          map.addLayer(pointsGroup);
+          markerClusters.addLayer(marker);
+          marker.on('mouseout', function (e) {
+              this.closePopup();
+          });
+        });
+        map.addLayer(markerClusters);
 
         function clickFunc(p){
           document.getElementById("mySidepanel").style.width = "250px";
@@ -689,26 +705,28 @@
               latlng: [data[i].latitude, data[i].longitude],
               stars: data[i].stars
             });
-          }
-          map.removeLayer(pointsGroup);
-          var currIcon = unactiveIcon;
+        }
+        map.removeLayer(markerClusters);
+        var currIcon = unactiveIcon;
 
-          var marker = null;
-          pointsGroup = L.layerGroup();
+        var marker = null;
+        pointsGroup = L.layerGroup();
+        markerClusters = new L.markerClusterGroup();
 
-          points.forEach(function(d){
-            marker = L.marker(d.latlng, {icon: currIcon, achieve: d.achieve })
-            .addTo(pointsGroup)
-            .on("click", clickFunc)
-            .on('mouseover', function (e) {
-                this.bindPopup(popupContent(e, points));
-                this.openPopup();
-            })
-            marker.on('mouseout', function (e) {
-                this.closePopup();
-            });
+        points.forEach(function(d){
+          marker = L.marker(d.latlng, {icon: currIcon, achieve: d.achieve })
+          .addTo(pointsGroup)
+          .on("click", clickFunc)
+          .on('mouseover', function (e) {
+              this.bindPopup(popupContent(e, points));
+              this.openPopup();
           });
-          map.addLayer(pointsGroup);
+          markerClusters.addLayer(marker);
+          marker.on('mouseout', function (e) {
+              this.closePopup();
+          });
+        });
+        map.addLayer(markerClusters);
 
         function clickFunc(p){
           document.getElementById("mySidepanel").style.width = "250px";
@@ -737,26 +755,28 @@
               latlng: [data[i].latitude, data[i].longitude],
               stars: data[i].stars
             });
-          }
-          map.removeLayer(pointsGroup);
-          var currIcon = unactiveIcon;
+        }
+        map.removeLayer(markerClusters);
+        var currIcon = unactiveIcon;
 
-          var marker = null;
-          pointsGroup = L.layerGroup();
+        var marker = null;
+        pointsGroup = L.layerGroup();
+        markerClusters = new L.markerClusterGroup();
 
-          points.forEach(function(d){
-            marker = L.marker(d.latlng, {icon: currIcon, achieve: d.achieve })
-            .addTo(pointsGroup)
-            .on("click", clickFunc)
-            .on('mouseover', function (e) {
-                this.bindPopup(popupContent(e, points));
-                this.openPopup();
-            })
-            marker.on('mouseout', function (e) {
-                this.closePopup();
-            });
+        points.forEach(function(d){
+          marker = L.marker(d.latlng, {icon: currIcon, achieve: d.achieve })
+          .addTo(pointsGroup)
+          .on("click", clickFunc)
+          .on('mouseover', function (e) {
+              this.bindPopup(popupContent(e, points));
+              this.openPopup();
           });
-          map.addLayer(pointsGroup);
+          markerClusters.addLayer(marker);
+          marker.on('mouseout', function (e) {
+              this.closePopup();
+          });
+        });
+        map.addLayer(markerClusters);
 
         function clickFunc(p){
           document.getElementById("mySidepanel").style.width = "250px";
