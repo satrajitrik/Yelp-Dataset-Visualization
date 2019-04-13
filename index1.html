@@ -134,13 +134,13 @@
 </head>
 <body>
   <div class="btn-group">
-    <button type="button" id="all" class="btn btn-primary"><img src="https://img.icons8.com/color/48/000000/food.png"></button> &nbsp
-    <button type="button" id="mexican" class="btn btn-primary"><img src="https://img.icons8.com/color/48/000000/taco.png"></button> &nbsp
-    <button type="button" id="italian" class="btn btn-primary"><img src="https://img.icons8.com/color/48/000000/spaghetti.png"></button> &nbsp
-    <button type="button" id="pizza" class="btn btn-primary"><img src="https://img.icons8.com/color/48/000000/pizza.png"></button> &nbsp
-    <button type="button" id="burger" class="btn btn-primary"><img src="https://img.icons8.com/color/48/000000/hamburger.png"></button> &nbsp
-    <button type="button" id="coffeetea" class="btn btn-primary"><img src="https://img.icons8.com/color/48/000000/cafe.png"></button> &nbsp
-    <button type="button" id="salad" class="btn btn-primary"><img src="https://img.icons8.com/color/48/000000/vegan-food.png"></button> &nbsp
+    <button type="button" id="all" class="btn btn-primary" title="View all restaurants"><img src="https://img.icons8.com/color/48/000000/food.png"></button> &nbsp
+    <button type="button" id="mexican" class="btn btn-primary" title="Mexican"><img src="https://img.icons8.com/color/48/000000/taco.png"></button> &nbsp
+    <button type="button" id="italian" class="btn btn-primary" title="Italian"><img src="https://img.icons8.com/color/48/000000/spaghetti.png"></button> &nbsp
+    <button type="button" id="pizza" class="btn btn-primary" title="Pizzas"><img src="https://img.icons8.com/color/48/000000/pizza.png"></button> &nbsp
+    <button type="button" id="burger" class="btn btn-primary" title="Burgers"><img src="https://img.icons8.com/color/48/000000/hamburger.png"></button> &nbsp
+    <button type="button" id="coffeetea" class="btn btn-primary" title="Cafes"><img src="https://img.icons8.com/color/48/000000/cafe.png"></button> &nbsp
+    <button type="button" id="salad" class="btn btn-primary" title="Salads"><img src="https://img.icons8.com/color/48/000000/vegan-food.png"></button> &nbsp
   </div>
   <div id="map"></div>
   <div id="mySidepanel" class="sidepanel" style="width:0px;">
@@ -209,6 +209,9 @@
   </div>
   <script>
   var prev;
+  // function over(id) {
+  //   document.getElementById(id).innerHTML="You have hovered mouse over me";
+  // }
   function CloseNav() {
     document.getElementById("mySidepanel").style.width = "0";
   }
