@@ -8,7 +8,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
   <style>
   body {margin:0;position:fixed;top:0;right:0;bottom:0;left:0; }
   #map{ width:100%; height:100%;}
@@ -135,9 +134,13 @@
 </head>
 <body>
   <div class="btn-group">
-        <button type="button" id="all" class="btn btn-success">All</button>
-        <button type="button" id="mexican" class="btn btn-primary">Mexican</button>
-        <button type="button" id="italian" class="btn btn-danger">Italian</button>
+    <button type="button" id="all" class="btn btn-primary"><img src="https://img.icons8.com/color/48/000000/food.png"></button> &nbsp
+    <button type="button" id="mexican" class="btn btn-primary"><img src="https://img.icons8.com/color/48/000000/taco.png"></button> &nbsp
+    <button type="button" id="italian" class="btn btn-primary"><img src="https://img.icons8.com/color/48/000000/spaghetti.png"></button> &nbsp
+    <button type="button" id="pizza" class="btn btn-primary"><img src="https://img.icons8.com/color/48/000000/pizza.png"></button> &nbsp
+    <button type="button" id="burger" class="btn btn-primary"><img src="https://img.icons8.com/color/48/000000/hamburger.png"></button> &nbsp
+    <button type="button" id="coffeetea" class="btn btn-primary"><img src="https://img.icons8.com/color/48/000000/cafe.png"></button> &nbsp
+    <button type="button" id="salad" class="btn btn-primary"><img src="https://img.icons8.com/color/48/000000/vegan-food.png"></button> &nbsp
   </div>
   <div id="map"></div>
   <div id="mySidepanel" class="sidepanel" style="width:0px;">
@@ -370,76 +373,180 @@
   }
 
   Promise.all([
-      d3.csv("data/top_10_mexican_restaurants.csv"),
-      d3.csv("data/top_10_italian_restaurants.csv"),
-    ]).then(function(files) {
-        document.getElementById("mySidepanel").style.width = "250px";
-        var data = null;
-        $("#all").click(function() {
-          data = files[0].concat(files[1]);
-          var isClicked = false;
-          var points = [];
-          for(var i = 0; i < data.length; i++) {
-            points.push(
-              {
-                name: data[i].name,
-                address: data[i].address,
-                hours: data[i].hours,
-                latlng: [data[i].latitude, data[i].longitude],
-                stars: data[i].stars
-              });
-            }
-            map.removeLayer(pointsGroup);
-            var currIcon = unactiveIcon;
-            
-            var marker = null;
-            pointsGroup = L.layerGroup();
+    d3.csv("data/top_10_mexican_restaurants.csv"),
+    d3.csv("data/top_10_italian_restaurants.csv"),
+    d3.csv("data/top_10_pizza_restaurants.csv"),
+    d3.csv("data/top_10_burger_restaurants.csv"),
+    d3.csv("data/top_10_coffeetea_restaurants.csv"),
+    d3.csv("data/top_10_salad_restaurants.csv"),
+  ]).then(function(files) {
+      document.getElementById("mySidepanel").style.width = "250px";
+      // var data = null;
+      var data = files[0];
+      for(var i = 1; i < files.length; i++) {
+        data = data.concat(files[i]);
+      }
+      var isClicked = false;
+      var points = [];
+      for(var i = 0; i < data.length; i++) {
+        points.push(
+          {
+            name: data[i].name,
+            address: data[i].address,
+            hours: data[i].hours,
+            latlng: [data[i].latitude, data[i].longitude],
+            stars: data[i].stars
+          });
+      }
+      map.removeLayer(pointsGroup);
+      var currIcon = unactiveIcon;
+      
+      var marker = null;
+      pointsGroup = L.layerGroup();
 
-            points.forEach(function(d){
-              marker = L.marker(d.latlng, {icon: currIcon, achieve: d.achieve })
-              .addTo(pointsGroup)
-              .on("click", clickFunc)
-              .on('mouseover', function (e) {
-                  this.bindPopup(popupContent(e, points));
-                  this.openPopup();
-              })
-              marker.on('mouseout', function (e) {
-                  this.closePopup();
-              });
-            });
-            map.addLayer(pointsGroup);
-          
-          function clickFunc(p){
-            document.getElementById("mySidepanel").style.width = "250px";
-            openNav(p, points);
-            //This part of code turns previous restaurant icon back to blue
-            if(prev){
-              prev.target.setIcon(unactiveIcon);
-            }
-
-            isClicked = !isClicked;
-            currIcon = activeIcon;
-            p.target.setIcon(currIcon);
-            prev = p;
-          }
+      points.forEach(function(d){
+        marker = L.marker(d.latlng, {icon: currIcon, achieve: d.achieve })
+        .addTo(pointsGroup)
+        .on("click", clickFunc)
+        .on('mouseover', function (e) {
+            this.bindPopup(popupContent(e, points));
+            this.openPopup();
+        })
+        marker.on('mouseout', function (e) {
+            this.closePopup();
         });
-        $("#mexican").click(function() {
-          data = files[0];
-          var isClicked = false;
-          var points = [];
-          for(var i = 0; i < data.length; i++) {
-            points.push(
-              {
-                name: data[i].name,
-                address: data[i].address,
-                hours: data[i].hours,
-                latlng: [data[i].latitude, data[i].longitude],
-                stars: data[i].stars
-              });
-            }
+      });
+      map.addLayer(pointsGroup);
+      
+      function clickFunc(p){
+        document.getElementById("mySidepanel").style.width = "250px";
+        openNav(p, points);
+        //This part of code turns previous restaurant icon back to blue
+        if(prev){
+          prev.target.setIcon(unactiveIcon);
+        }
+
+        isClicked = !isClicked;
+        currIcon = activeIcon;
+        p.target.setIcon(currIcon);
+        prev = p;
+      }
+      $("#all").click(function() {
+        var data = files[0];
+        for(var i = 1; i < files.length; i++) {
+          data = data.concat(files[i]);
+        }
+        var isClicked = false;
+        var points = [];
+        for(var i = 0; i < data.length; i++) {
+          points.push(
+            {
+              name: data[i].name,
+              address: data[i].address,
+              hours: data[i].hours,
+              latlng: [data[i].latitude, data[i].longitude],
+              stars: data[i].stars
+            });
+        }
+        map.removeLayer(pointsGroup);
+        var currIcon = unactiveIcon;
+        
+        var marker = null;
+        pointsGroup = L.layerGroup();
+
+        points.forEach(function(d){
+          marker = L.marker(d.latlng, {icon: currIcon, achieve: d.achieve })
+          .addTo(pointsGroup)
+          .on("click", clickFunc)
+          .on('mouseover', function (e) {
+              this.bindPopup(popupContent(e, points));
+              this.openPopup();
+          })
+          marker.on('mouseout', function (e) {
+              this.closePopup();
+          });
+        });
+        map.addLayer(pointsGroup);
+        
+        function clickFunc(p){
+          document.getElementById("mySidepanel").style.width = "250px";
+          openNav(p, points);
+          //This part of code turns previous restaurant icon back to blue
+          if(prev){
+            prev.target.setIcon(unactiveIcon);
+          }
+
+          isClicked = !isClicked;
+          currIcon = activeIcon;
+          p.target.setIcon(currIcon);
+          prev = p;
+        }
+      });
+      $("#mexican").click(function() {
+        data = files[0];
+        var isClicked = false;
+        var points = [];
+        for(var i = 0; i < data.length; i++) {
+          points.push(
+            {
+              name: data[i].name,
+              address: data[i].address,
+              hours: data[i].hours,
+              latlng: [data[i].latitude, data[i].longitude],
+              stars: data[i].stars
+            });
+          }
+        map.removeLayer(pointsGroup);
+        var currIcon = unactiveIcon;
+        
+        var marker = null;
+        pointsGroup = L.layerGroup();
+
+        points.forEach(function(d){
+          marker = L.marker(d.latlng, {icon: currIcon, achieve: d.achieve })
+          .addTo(pointsGroup)
+          .on("click", clickFunc)
+          .on('mouseover', function (e) {
+              this.bindPopup(popupContent(e, points));
+              this.openPopup();
+          })
+          marker.on('mouseout', function (e) {
+              this.closePopup();
+          });
+        });
+        map.addLayer(pointsGroup);
+        
+        function clickFunc(p){
+          document.getElementById("mySidepanel").style.width = "250px";
+          openNav(p, points);
+          //This part of code turns previous restaurant icon back to blue
+          if(prev){
+            prev.target.setIcon(unactiveIcon);
+          }
+
+          isClicked = !isClicked;
+          currIcon = activeIcon;
+          p.target.setIcon(currIcon);
+          prev = p;
+        }
+      });
+      $("#italian").click(function() {
+        data = files[1];
+        var isClicked = false;
+        var points = [];
+        for(var i = 0; i < data.length; i++) {
+          points.push(
+            {
+              name: data[i].name,
+              address: data[i].address,
+              hours: data[i].hours,
+              latlng: [data[i].latitude, data[i].longitude],
+              stars: data[i].stars
+            });
+          }
           map.removeLayer(pointsGroup);
           var currIcon = unactiveIcon;
-          
+
           var marker = null;
           pointsGroup = L.layerGroup();
 
@@ -456,72 +563,216 @@
             });
           });
           map.addLayer(pointsGroup);
-          
-          function clickFunc(p){
-            document.getElementById("mySidepanel").style.width = "250px";
-            openNav(p, points);
-            //This part of code turns previous restaurant icon back to blue
-            if(prev){
-              prev.target.setIcon(unactiveIcon);
-            }
 
-            isClicked = !isClicked;
-            currIcon = activeIcon;
-            p.target.setIcon(currIcon);
-            prev = p;
+        function clickFunc(p){
+          document.getElementById("mySidepanel").style.width = "250px";
+          openNav(p, points);
+          //This part of code turns previous restaurant icon back to blue
+          if(prev){
+            prev.target.setIcon(unactiveIcon);
           }
-        });
-        $("#italian").click(function() {
-          data = files[1];
-          var isClicked = false;
-          var points = [];
-          for(var i = 0; i < data.length; i++) {
-            points.push(
-              {
-                name: data[i].name,
-                address: data[i].address,
-                hours: data[i].hours,
-                latlng: [data[i].latitude, data[i].longitude],
-                stars: data[i].stars
-              });
-            }
-            map.removeLayer(pointsGroup);
-            var currIcon = unactiveIcon;
 
-            var marker = null;
-            pointsGroup = L.layerGroup();
-
-            points.forEach(function(d){
-              marker = L.marker(d.latlng, {icon: currIcon, achieve: d.achieve })
-              .addTo(pointsGroup)
-              .on("click", clickFunc)
-              .on('mouseover', function (e) {
-                  this.bindPopup(popupContent(e, points));
-                  this.openPopup();
-              })
-              marker.on('mouseout', function (e) {
-                  this.closePopup();
-              });
+          isClicked = !isClicked;
+          currIcon = activeIcon;
+          p.target.setIcon(currIcon);
+          prev = p;
+        }
+      });
+      $("#pizza").click(function() {
+        data = files[2];
+        var isClicked = false;
+        var points = [];
+        for(var i = 0; i < data.length; i++) {
+          points.push(
+            {
+              name: data[i].name,
+              address: data[i].address,
+              hours: data[i].hours,
+              latlng: [data[i].latitude, data[i].longitude],
+              stars: data[i].stars
             });
-            map.addLayer(pointsGroup);
-
-          function clickFunc(p){
-            document.getElementById("mySidepanel").style.width = "250px";
-            openNav(p, points);
-            //This part of code turns previous restaurant icon back to blue
-            if(prev){
-              prev.target.setIcon(unactiveIcon);
-            }
-
-            isClicked = !isClicked;
-            currIcon = activeIcon;
-            p.target.setIcon(currIcon);
-            prev = p;
           }
-        });
-      }).catch(function(err) {
-        // handle error here
-    });
+          map.removeLayer(pointsGroup);
+          var currIcon = unactiveIcon;
+
+          var marker = null;
+          pointsGroup = L.layerGroup();
+
+          points.forEach(function(d){
+            marker = L.marker(d.latlng, {icon: currIcon, achieve: d.achieve })
+            .addTo(pointsGroup)
+            .on("click", clickFunc)
+            .on('mouseover', function (e) {
+                this.bindPopup(popupContent(e, points));
+                this.openPopup();
+            })
+            marker.on('mouseout', function (e) {
+                this.closePopup();
+            });
+          });
+          map.addLayer(pointsGroup);
+
+        function clickFunc(p){
+          document.getElementById("mySidepanel").style.width = "250px";
+          openNav(p, points);
+          //This part of code turns previous restaurant icon back to blue
+          if(prev){
+            prev.target.setIcon(unactiveIcon);
+          }
+
+          isClicked = !isClicked;
+          currIcon = activeIcon;
+          p.target.setIcon(currIcon);
+          prev = p;
+        }
+      });
+      $("#burger").click(function() {
+        data = files[3];
+        var isClicked = false;
+        var points = [];
+        for(var i = 0; i < data.length; i++) {
+          points.push(
+            {
+              name: data[i].name,
+              address: data[i].address,
+              hours: data[i].hours,
+              latlng: [data[i].latitude, data[i].longitude],
+              stars: data[i].stars
+            });
+          }
+          map.removeLayer(pointsGroup);
+          var currIcon = unactiveIcon;
+
+          var marker = null;
+          pointsGroup = L.layerGroup();
+
+          points.forEach(function(d){
+            marker = L.marker(d.latlng, {icon: currIcon, achieve: d.achieve })
+            .addTo(pointsGroup)
+            .on("click", clickFunc)
+            .on('mouseover', function (e) {
+                this.bindPopup(popupContent(e, points));
+                this.openPopup();
+            })
+            marker.on('mouseout', function (e) {
+                this.closePopup();
+            });
+          });
+          map.addLayer(pointsGroup);
+
+        function clickFunc(p){
+          document.getElementById("mySidepanel").style.width = "250px";
+          openNav(p, points);
+          //This part of code turns previous restaurant icon back to blue
+          if(prev){
+            prev.target.setIcon(unactiveIcon);
+          }
+
+          isClicked = !isClicked;
+          currIcon = activeIcon;
+          p.target.setIcon(currIcon);
+          prev = p;
+        }
+      });
+      $("#coffeetea").click(function() {
+        data = files[4];
+        var isClicked = false;
+        var points = [];
+        for(var i = 0; i < data.length; i++) {
+          points.push(
+            {
+              name: data[i].name,
+              address: data[i].address,
+              hours: data[i].hours,
+              latlng: [data[i].latitude, data[i].longitude],
+              stars: data[i].stars
+            });
+          }
+          map.removeLayer(pointsGroup);
+          var currIcon = unactiveIcon;
+
+          var marker = null;
+          pointsGroup = L.layerGroup();
+
+          points.forEach(function(d){
+            marker = L.marker(d.latlng, {icon: currIcon, achieve: d.achieve })
+            .addTo(pointsGroup)
+            .on("click", clickFunc)
+            .on('mouseover', function (e) {
+                this.bindPopup(popupContent(e, points));
+                this.openPopup();
+            })
+            marker.on('mouseout', function (e) {
+                this.closePopup();
+            });
+          });
+          map.addLayer(pointsGroup);
+
+        function clickFunc(p){
+          document.getElementById("mySidepanel").style.width = "250px";
+          openNav(p, points);
+          //This part of code turns previous restaurant icon back to blue
+          if(prev){
+            prev.target.setIcon(unactiveIcon);
+          }
+
+          isClicked = !isClicked;
+          currIcon = activeIcon;
+          p.target.setIcon(currIcon);
+          prev = p;
+        }
+      });
+      $("#salad").click(function() {
+        data = files[5];
+        var isClicked = false;
+        var points = [];
+        for(var i = 0; i < data.length; i++) {
+          points.push(
+            {
+              name: data[i].name,
+              address: data[i].address,
+              hours: data[i].hours,
+              latlng: [data[i].latitude, data[i].longitude],
+              stars: data[i].stars
+            });
+          }
+          map.removeLayer(pointsGroup);
+          var currIcon = unactiveIcon;
+
+          var marker = null;
+          pointsGroup = L.layerGroup();
+
+          points.forEach(function(d){
+            marker = L.marker(d.latlng, {icon: currIcon, achieve: d.achieve })
+            .addTo(pointsGroup)
+            .on("click", clickFunc)
+            .on('mouseover', function (e) {
+                this.bindPopup(popupContent(e, points));
+                this.openPopup();
+            })
+            marker.on('mouseout', function (e) {
+                this.closePopup();
+            });
+          });
+          map.addLayer(pointsGroup);
+
+        function clickFunc(p){
+          document.getElementById("mySidepanel").style.width = "250px";
+          openNav(p, points);
+          //This part of code turns previous restaurant icon back to blue
+          if(prev){
+            prev.target.setIcon(unactiveIcon);
+          }
+
+          isClicked = !isClicked;
+          currIcon = activeIcon;
+          p.target.setIcon(currIcon);
+          prev = p;
+        }
+      });
+    }).catch(function(err) {
+      // handle error here
+  });
   
 </script>
 </body>
