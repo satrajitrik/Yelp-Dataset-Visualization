@@ -134,13 +134,13 @@
 </head>
 <body>
   <div class="btn-group">
-    <button type="button" id="all" class="btn btn-primary" title="View all restaurants"><img src="https://img.icons8.com/color/48/000000/food.png"></button> &nbsp
+    <button type="button" id="all" class="btn btn-primary" title="View all restaurants"><img src="https://img.icons8.com/color/48/000000/restaurant-building.png"></button> &nbsp
     <button type="button" id="mexican" class="btn btn-primary" title="Mexican"><img src="https://img.icons8.com/color/48/000000/taco.png"></button> &nbsp
     <button type="button" id="italian" class="btn btn-primary" title="Italian"><img src="https://img.icons8.com/color/48/000000/spaghetti.png"></button> &nbsp
     <button type="button" id="pizza" class="btn btn-primary" title="Pizzas"><img src="https://img.icons8.com/color/48/000000/pizza.png"></button> &nbsp
     <button type="button" id="burger" class="btn btn-primary" title="Burgers"><img src="https://img.icons8.com/color/48/000000/hamburger.png"></button> &nbsp
-    <button type="button" id="coffeetea" class="btn btn-primary" title="Cafes"><img src="https://img.icons8.com/color/48/000000/cafe.png"></button> &nbsp
-    <button type="button" id="salad" class="btn btn-primary" title="Salads"><img src="https://img.icons8.com/color/48/000000/vegan-food.png"></button> &nbsp
+    <button type="button" id="coffeetea" class="btn btn-primary" title="Cafes"><img src="https://img.icons8.com/color/48/000000/tea.png"></button> &nbsp
+    <button type="button" id="salad" class="btn btn-primary" title="Salads"><img src="https://img.icons8.com/color/48/000000/lettuce.png"></button> &nbsp
   </div>
   <div id="map"></div>
   <div id="mySidepanel" class="sidepanel" style="width:0px;">
@@ -215,20 +215,19 @@
   function CloseNav() {
     document.getElementById("mySidepanel").style.width = "0";
   }
-  var layer1 = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
-                  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-                  subdomains: 'abcd',
-                  maxZoom: 19
-  }),
-  layer2 = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
+  var layer1 = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
     subdomains: 'abcd',
+    maxZoom: 19
+  }),
+  layer2 = L.tileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png', {
+    attribution: '<a href="https://wikimediafoundation.org/wiki/Maps_Terms_of_Use">Wikimedia</a>',
     maxZoom: 19
   });
 
   var baseLayers = {
-    "light": layer1,
-    "dark": layer2
+    "Minimal": layer1,
+    "Detailed": layer2
   };
   var pointsGroup = L.layerGroup();
   var map = L.map("map", {
@@ -240,14 +239,14 @@
   L.control.layers(baseLayers, {position: "topleft"}).addTo(map);
 
   var unactiveIcon = new L.Icon({
-              iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png',
+              iconUrl: 'https://image.flaticon.com/icons/svg/1516/1516034.svg',
               iconSize: [25, 41],
               iconAnchor: [12, 41],
               popupAnchor: [1, -34],
               shadowSize: [41, 41]
             });
   var activeIcon = new L.Icon({
-              iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+              iconUrl: 'https://image.flaticon.com/icons/svg/1516/1516233.svg',
               shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
               iconSize: [25, 41],
               iconAnchor: [12, 41],
