@@ -388,409 +388,91 @@
     d3.csv("data/top_10_salad_restaurants.csv"),
   ]).then(function(files) {
       document.getElementById("mySidepanel").style.width = "250px";
+      function renderData(data) {
+        var isClicked = false;
+        var points = [];
+        for(var i = 0; i < data.length; i++) {
+          points.push(
+            {
+              name: data[i].name,
+              address: data[i].address,
+              hours: data[i].hours,
+              latlng: [data[i].latitude, data[i].longitude],
+              stars: data[i].stars
+            });
+        }
+        map.removeLayer(markerClusters);
+        var currIcon = unactiveIcon;
+        
+        var marker = null;
+        pointsGroup = L.layerGroup();
+        markerClusters = new L.markerClusterGroup();
+
+        points.forEach(function(d){
+          marker = L.marker(d.latlng, {icon: currIcon, achieve: d.achieve })
+          .addTo(pointsGroup)
+          .on("click", clickFunc)
+          .on('mouseover', function (e) {
+              this.bindPopup(popupContent(e, points));
+              this.openPopup();
+          });
+          markerClusters.addLayer(marker);
+          marker.on('mouseout', function (e) {
+              this.closePopup();
+          });
+        });
+        map.addLayer(markerClusters);
+        
+        function clickFunc(p){
+          document.getElementById("mySidepanel").style.width = "250px";
+          openNav(p, points);
+          //This part of code turns previous restaurant icon back to blue
+          if(prev){
+            prev.target.setIcon(unactiveIcon);
+          }
+
+          isClicked = !isClicked;
+          currIcon = activeIcon;
+          p.target.setIcon(currIcon);
+          prev = p;
+        }
+      }
+
       var data = files[0];
       for(var i = 1; i < files.length; i++) {
         data = data.concat(files[i]);
       }
-      var isClicked = false;
-      var points = [];
-      for(var i = 0; i < data.length; i++) {
-        points.push(
-          {
-            name: data[i].name,
-            address: data[i].address,
-            hours: data[i].hours,
-            latlng: [data[i].latitude, data[i].longitude],
-            stars: data[i].stars
-          });
-      }
-      map.removeLayer(markerClusters);
-      var currIcon = unactiveIcon;
-      
-      var marker = null;
-      pointsGroup = L.layerGroup();
-      markerClusters = new L.markerClusterGroup();
- 
-      points.forEach(function(d){
-        marker = L.marker(d.latlng, {icon: currIcon, achieve: d.achieve })
-        .addTo(pointsGroup)
-        .on("click", clickFunc)
-        .on('mouseover', function (e) {
-            this.bindPopup(popupContent(e, points));
-            this.openPopup();
-        });
-        markerClusters.addLayer(marker);
-        marker.on('mouseout', function (e) {
-            this.closePopup();
-        });
-      });
-      map.addLayer(markerClusters);
-      
-      function clickFunc(p){
-        document.getElementById("mySidepanel").style.width = "250px";
-        openNav(p, points);
-        //This part of code turns previous restaurant icon back to blue
-        if(prev){
-          prev.target.setIcon(unactiveIcon);
-        }
-
-        isClicked = !isClicked;
-        currIcon = activeIcon;
-        p.target.setIcon(currIcon);
-        prev = p;
-      }
+      renderData(data);
       $("#all").click(function() {
         var data = files[0];
         for(var i = 1; i < files.length; i++) {
           data = data.concat(files[i]);
         }
-        var isClicked = false;
-        var points = [];
-        for(var i = 0; i < data.length; i++) {
-          points.push(
-            {
-              name: data[i].name,
-              address: data[i].address,
-              hours: data[i].hours,
-              latlng: [data[i].latitude, data[i].longitude],
-              stars: data[i].stars
-            });
-        }
-        map.removeLayer(markerClusters);
-        var currIcon = unactiveIcon;
-        
-        var marker = null;
-        pointsGroup = L.layerGroup();
-        markerClusters = new L.markerClusterGroup();
-
-        points.forEach(function(d){
-          marker = L.marker(d.latlng, {icon: currIcon, achieve: d.achieve })
-          .addTo(pointsGroup)
-          .on("click", clickFunc)
-          .on('mouseover', function (e) {
-              this.bindPopup(popupContent(e, points));
-              this.openPopup();
-          });
-          markerClusters.addLayer(marker);
-          marker.on('mouseout', function (e) {
-              this.closePopup();
-          });
-        });
-        map.addLayer(markerClusters);
-        
-        function clickFunc(p){
-          document.getElementById("mySidepanel").style.width = "250px";
-          openNav(p, points);
-          //This part of code turns previous restaurant icon back to blue
-          if(prev){
-            prev.target.setIcon(unactiveIcon);
-          }
-
-          isClicked = !isClicked;
-          currIcon = activeIcon;
-          p.target.setIcon(currIcon);
-          prev = p;
-        }
+        renderData(data);
       });
       $("#mexican").click(function() {
         data = files[0];
-        var isClicked = false;
-        var points = [];
-        for(var i = 0; i < data.length; i++) {
-          points.push(
-            {
-              name: data[i].name,
-              address: data[i].address,
-              hours: data[i].hours,
-              latlng: [data[i].latitude, data[i].longitude],
-              stars: data[i].stars
-            });
-          }
-        map.removeLayer(markerClusters);
-        var currIcon = unactiveIcon;
-        
-        var marker = null;
-        pointsGroup = L.layerGroup();
-        markerClusters = new L.markerClusterGroup();
-
-        points.forEach(function(d){
-          marker = L.marker(d.latlng, {icon: currIcon, achieve: d.achieve })
-          .addTo(pointsGroup)
-          .on("click", clickFunc)
-          .on('mouseover', function (e) {
-              this.bindPopup(popupContent(e, points));
-              this.openPopup();
-          });
-          markerClusters.addLayer(marker);
-          marker.on('mouseout', function (e) {
-              this.closePopup();
-          });
-        });
-        map.addLayer(markerClusters);
-        
-        function clickFunc(p){
-          document.getElementById("mySidepanel").style.width = "250px";
-          openNav(p, points);
-          //This part of code turns previous restaurant icon back to blue
-          if(prev){
-            prev.target.setIcon(unactiveIcon);
-          }
-
-          isClicked = !isClicked;
-          currIcon = activeIcon;
-          p.target.setIcon(currIcon);
-          prev = p;
-        }
+        renderData(data);
       });
       $("#italian").click(function() {
         data = files[1];
-        var isClicked = false;
-        var points = [];
-        for(var i = 0; i < data.length; i++) {
-          points.push(
-            {
-              name: data[i].name,
-              address: data[i].address,
-              hours: data[i].hours,
-              latlng: [data[i].latitude, data[i].longitude],
-              stars: data[i].stars
-            });
-          }
-        map.removeLayer(markerClusters);
-        var currIcon = unactiveIcon;
-
-        var marker = null;
-        pointsGroup = L.layerGroup();
-        markerClusters = new L.markerClusterGroup();
-
-        points.forEach(function(d){
-          marker = L.marker(d.latlng, {icon: currIcon, achieve: d.achieve })
-          .addTo(pointsGroup)
-          .on("click", clickFunc)
-          .on('mouseover', function (e) {
-              this.bindPopup(popupContent(e, points));
-              this.openPopup();
-          });
-          markerClusters.addLayer(marker);
-          marker.on('mouseout', function (e) {
-              this.closePopup();
-          });
-        });
-        map.addLayer(markerClusters);
-
-        function clickFunc(p){
-          document.getElementById("mySidepanel").style.width = "250px";
-          openNav(p, points);
-          //This part of code turns previous restaurant icon back to blue
-          if(prev){
-            prev.target.setIcon(unactiveIcon);
-          }
-
-          isClicked = !isClicked;
-          currIcon = activeIcon;
-          p.target.setIcon(currIcon);
-          prev = p;
-        }
+        renderData(data);
       });
       $("#pizza").click(function() {
         data = files[2];
-        var isClicked = false;
-        var points = [];
-        for(var i = 0; i < data.length; i++) {
-          points.push(
-            {
-              name: data[i].name,
-              address: data[i].address,
-              hours: data[i].hours,
-              latlng: [data[i].latitude, data[i].longitude],
-              stars: data[i].stars
-            });
-        }
-        map.removeLayer(markerClusters);
-        var currIcon = unactiveIcon;
-
-        var marker = null;
-        pointsGroup = L.layerGroup();
-        markerClusters = new L.markerClusterGroup();
-
-        points.forEach(function(d){
-          marker = L.marker(d.latlng, {icon: currIcon, achieve: d.achieve })
-          .addTo(pointsGroup)
-          .on("click", clickFunc)
-          .on('mouseover', function (e) {
-              this.bindPopup(popupContent(e, points));
-              this.openPopup();
-          });
-          markerClusters.addLayer(marker);
-          marker.on('mouseout', function (e) {
-              this.closePopup();
-          });
-        });
-        map.addLayer(markerClusters);
-
-        function clickFunc(p){
-          document.getElementById("mySidepanel").style.width = "250px";
-          openNav(p, points);
-          //This part of code turns previous restaurant icon back to blue
-          if(prev){
-            prev.target.setIcon(unactiveIcon);
-          }
-
-          isClicked = !isClicked;
-          currIcon = activeIcon;
-          p.target.setIcon(currIcon);
-          prev = p;
-        }
+        renderData(data);
       });
       $("#burger").click(function() {
         data = files[3];
-        var isClicked = false;
-        var points = [];
-        for(var i = 0; i < data.length; i++) {
-          points.push(
-            {
-              name: data[i].name,
-              address: data[i].address,
-              hours: data[i].hours,
-              latlng: [data[i].latitude, data[i].longitude],
-              stars: data[i].stars
-            });
-        }
-        map.removeLayer(markerClusters);
-        var currIcon = unactiveIcon;
-
-        var marker = null;
-        pointsGroup = L.layerGroup();
-        markerClusters = new L.markerClusterGroup();
-
-        points.forEach(function(d){
-          marker = L.marker(d.latlng, {icon: currIcon, achieve: d.achieve })
-          .addTo(pointsGroup)
-          .on("click", clickFunc)
-          .on('mouseover', function (e) {
-              this.bindPopup(popupContent(e, points));
-              this.openPopup();
-          });
-          markerClusters.addLayer(marker);
-          marker.on('mouseout', function (e) {
-              this.closePopup();
-          });
-        });
-        map.addLayer(markerClusters);
-
-        function clickFunc(p){
-          document.getElementById("mySidepanel").style.width = "250px";
-          openNav(p, points);
-          //This part of code turns previous restaurant icon back to blue
-          if(prev){
-            prev.target.setIcon(unactiveIcon);
-          }
-
-          isClicked = !isClicked;
-          currIcon = activeIcon;
-          p.target.setIcon(currIcon);
-          prev = p;
-        }
+        renderData(data);
       });
       $("#coffeetea").click(function() {
         data = files[4];
-        var isClicked = false;
-        var points = [];
-        for(var i = 0; i < data.length; i++) {
-          points.push(
-            {
-              name: data[i].name,
-              address: data[i].address,
-              hours: data[i].hours,
-              latlng: [data[i].latitude, data[i].longitude],
-              stars: data[i].stars
-            });
-        }
-        map.removeLayer(markerClusters);
-        var currIcon = unactiveIcon;
-
-        var marker = null;
-        pointsGroup = L.layerGroup();
-        markerClusters = new L.markerClusterGroup();
-
-        points.forEach(function(d){
-          marker = L.marker(d.latlng, {icon: currIcon, achieve: d.achieve })
-          .addTo(pointsGroup)
-          .on("click", clickFunc)
-          .on('mouseover', function (e) {
-              this.bindPopup(popupContent(e, points));
-              this.openPopup();
-          });
-          markerClusters.addLayer(marker);
-          marker.on('mouseout', function (e) {
-              this.closePopup();
-          });
-        });
-        map.addLayer(markerClusters);
-
-        function clickFunc(p){
-          document.getElementById("mySidepanel").style.width = "250px";
-          openNav(p, points);
-          //This part of code turns previous restaurant icon back to blue
-          if(prev){
-            prev.target.setIcon(unactiveIcon);
-          }
-
-          isClicked = !isClicked;
-          currIcon = activeIcon;
-          p.target.setIcon(currIcon);
-          prev = p;
-        }
+        renderData(data)
       });
       $("#salad").click(function() {
         data = files[5];
-        var isClicked = false;
-        var points = [];
-        for(var i = 0; i < data.length; i++) {
-          points.push(
-            {
-              name: data[i].name,
-              address: data[i].address,
-              hours: data[i].hours,
-              latlng: [data[i].latitude, data[i].longitude],
-              stars: data[i].stars
-            });
-        }
-        map.removeLayer(markerClusters);
-        var currIcon = unactiveIcon;
-
-        var marker = null;
-        pointsGroup = L.layerGroup();
-        markerClusters = new L.markerClusterGroup();
-
-        points.forEach(function(d){
-          marker = L.marker(d.latlng, {icon: currIcon, achieve: d.achieve })
-          .addTo(pointsGroup)
-          .on("click", clickFunc)
-          .on('mouseover', function (e) {
-              this.bindPopup(popupContent(e, points));
-              this.openPopup();
-          });
-          markerClusters.addLayer(marker);
-          marker.on('mouseout', function (e) {
-              this.closePopup();
-          });
-        });
-        map.addLayer(markerClusters);
-
-        function clickFunc(p){
-          document.getElementById("mySidepanel").style.width = "250px";
-          openNav(p, points);
-          //This part of code turns previous restaurant icon back to blue
-          if(prev){
-            prev.target.setIcon(unactiveIcon);
-          }
-
-          isClicked = !isClicked;
-          currIcon = activeIcon;
-          p.target.setIcon(currIcon);
-          prev = p;
-        }
+        renderData(data);
       });
     }).catch(function(err) {
       // handle error here
