@@ -5,7 +5,7 @@
   <link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/MarkerCluster.css" />
   <link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/MarkerCluster.Default.css" />
 
-  <link href="https://fonts.googleapis.com/css?family=Krub" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Krub|Medula+One|Lily+Script+One" rel="stylesheet">
  
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
@@ -19,16 +19,16 @@
   	margin:0;
   	position:fixed;
   	font-family: 'Krub', sans-serif;
-  	top:10px;
+  	top:0px;
   	right:0;
   	bottom:0;
   	left:0; 
   }
   #map{ 
   	position: fixed;
-  	top: 10%;
+  	top: 15%;
   	width:80%; 
-  	height:90%;
+  	height:85%;
   }
   /*.tooltip{ width: auto; height: auto; position: absolute; font-size: 12px; background-color: white;}*/
   table {
@@ -68,11 +68,11 @@
   /* The sidepanel menu */
   /* The sidepanel menu */
   .sidepanel {
-    height: 90%; /* Specify a height */
+    height: 85%; /* Specify a height */
     width: 0; /* 0 width - change this with JavaScript */
     position: fixed; /* Stay in place */
     z-index: 1; /* Stay on top */
-    top: 10%;
+    top: 15%;
     right: 0;
     background-color: #F2F3F4; /* Grey*/
     overflow-x: hidden; /* Disable horizontal scroll */
@@ -150,30 +150,57 @@
     background-color: #D3D3D3;
     overflow: hidden;
   }
-
+  .btn-group{
+  	display: inline-block;
+  	text-align: center;
+  	align-items: center;
+  }
   .btn-primary {
     color: #fff;
-    background-color: #ffffff;
-    border-color: #fff;
-  	border-radius: 20;
+    height: 4%;
+    background-color: #FFFFFF;
+    border-color: #FFFFFF;
+    vertical-align: middle;
+    text-align: center;
   }
 
   .btn-primary:hover
   {
     background-color: #F2F3F4;
-    border-color: #fff;
-  	border-radius: 20;
+    border-color: #F2F3F4;
   }
   .btn-primary:focus   
   {
     background-color: #F2F3F4;
-  	border-color: #fff;
-  	border-radius: 20;
+  	border-color: #F2F3F4;
   }
+  .main-heading{
+  	height: 5%;
+  	font-family: 'Lily Script One', cursive;
+  	text-align: center;
+  	line-height: 60px;
+  	vertical-align: text-bottom;
+  	background: #34495e;
+  	font-size: 26px;
+  	color: #FFFFFF;
+  }
+ .title-bar{
+    height: 3%;
+  	font-family: 'Krub', sans-serif;
+  	text-align: center;
+  	line-height: 18px;
+  	vertical-align: top;
+  	background: #34495e;
+  	font-size: 15px;
+  	color: #FFFFFF;
+  }
+
 
   </style>
 </head>
 <body>
+  <div class="main-heading">Where Should I dine tonight?</div>
+  <div class = "title-bar">A Comparitive Study of Ratings v.s. Reviews</div>
   <div class="btn-group">
     <button type="button" id="all" class="btn btn-primary" title="View all restaurants"><img src="https://img.icons8.com/color/48/000000/restaurant-building.png"></button> &nbsp
     <button type="button" id="mexican" class="btn btn-primary" title="Mexican"><img src="https://img.icons8.com/color/48/000000/taco.png"></button> &nbsp
@@ -282,7 +309,7 @@
 
   var unactiveIcon = new L.Icon({
               iconUrl: 'https://image.flaticon.com/icons/svg/1516/1516034.svg',
-              iconSize: [25, 41],
+              iconSize: [50, 41],
               iconAnchor: [12, 41],
               popupAnchor: [1, -34],
               shadowSize: [41, 41]
@@ -290,7 +317,7 @@
   var activeIcon = new L.Icon({
               iconUrl: 'https://image.flaticon.com/icons/svg/1516/1516233.svg',
               shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-              iconSize: [25, 41],
+              iconSize: [50, 41],
               iconAnchor: [12, 41],
               popupAnchor: [1, -34],
               shadowSize: [41, 41]
