@@ -2,120 +2,545 @@
 <head>
   <meta charset="utf-8">
   <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css">
-  <script src="https://d3js.org/d3.v3.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/MarkerCluster.css" />
+  <link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/MarkerCluster.Default.css" />
+
+  <link href="https://fonts.googleapis.com/css?family=Krub|Medula+One|Lily+Script+One" rel="stylesheet">
+ 
+  <script src="https://d3js.org/d3.v5.min.js"></script>
   <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+  <script type='text/javascript' src='http://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/leaflet.markercluster.js'></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
   <style>
-    body { margin:0;position:fixed;top:0;right:0;bottom:0;left:0; }
-    #map{ width:100%; height:800px; }
-    .tooltip{ width: 80px; height: 80px; position: absolute; left: -9999p; }
-    .tooltip > svg{ margin:auto; display: block; }
+  body {
+  	margin:0;
+  	position:fixed;
+  	font-family: 'Krub', sans-serif;
+  	top:0px;
+  	right:0;
+  	bottom:0;
+  	left:0; 
+  }
+  #map{ 
+  	position: fixed;
+  	top: 15%;
+  	width:80%; 
+  	height:85%;
+  }
+  /*.tooltip{ width: auto; height: auto; position: absolute; font-size: 12px; background-color: white;}*/
+  table {
+    font-family: 'Krub', sans-serif;
+    border-collapse: collapse;
+    width: 80%;
+    
+    }
+
+  td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
+
+  /* CSS used here will be applied after bootstrap.css */
+  .half {
+    position:relative;
+  }
+  .font{
+    font-size:6em;
+  }
+  .half:after {
+    content:'';
+    position:absolute;
+    z-index:1;
+    background:white;
+    width: 50%;
+    height: 100%;
+    left: 47%;
+  }
+
+
+  /* tr:nth-child(even) {
+  background-color: #dddddd;
+  } */
+  /* The sidepanel menu */
+  /* The sidepanel menu */
+  .sidepanel {
+    height: 85%; /* Specify a height */
+    width: 0; /* 0 width - change this with JavaScript */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Stay on top */
+    top: 15%;
+    right: 0;
+    background-color: #F2F3F4; /* Grey*/
+    overflow-x: hidden; /* Disable horizontal scroll */
+    padding-top: 60px; /* Place content 60px from the top */
+    transition: 0.5s; /* 0.5 second transition effect to slide in the sidepanel */
+  }
+
+  /* The sidepanel links */
+  .sidepanel a {
+  	font-family: 'Krub', sans-serif;
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 20px;
+    color: #909497;
+    display: block;
+    transition: 0.3s;
+  }
+
+  /* When you mouse over the navigation links, change their color */
+  .sidepanel a:hover {
+    color: #1B2631;
+  }
+
+  /* Position and style the close button (top right corner) */
+  .sidepanel .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+  }
+
+  /* Style the button that is used to open the sidepanel */
+  .openbtn {
+    font-size: 20px;
+    cursor: pointer;
+    background-color: #111;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+  }
+
+  .openbtn:hover {
+    background-color: #444;
+  }
+
+  .panel-body{
+    position: relative;
+    left: 35px;
+  }
+
+
+  /*Star Rating CSS*/
+  .star {
+    font-size: x-large;
+    width: 50px;
+    display: inline-block;
+    color: gray;
+  }
+  .star:last-child {
+    margin-right: 0;
+  }
+  .star:before {
+    content:'\2605';
+  }
+  .star.on {
+    color: gold;
+  }
+  .star.half:after {
+    content:'\2605';
+    color: gold;
+    position: absolute;
+    margin-left: -22px;
+    width: 10px;
+    background-color: #D3D3D3;
+    overflow: hidden;
+  }
+  .btn-group{
+  	display: inline-block;
+  	text-align: center;
+  	align-items: center;
+  }
+  .btn-primary {
+    color: #fff;
+    height: 4%;
+    background-color: #FFFFFF;
+    border-color: #FFFFFF;
+    vertical-align: middle;
+    text-align: center;
+  }
+
+  .btn-primary:hover
+  {
+    background-color: #F2F3F4;
+    border-color: #F2F3F4;
+  }
+  .btn-primary:focus   
+  {
+    background-color: #F2F3F4;
+  	border-color: #F2F3F4;
+  }
+  .main-heading{
+  	height: 5%;
+  	font-family: 'Lily Script One', cursive;
+  	text-align: center;
+  	line-height: 60px;
+  	vertical-align: text-bottom;
+  	background: #34495e;
+  	font-size: 26px;
+  	color: #FFFFFF;
+  }
+ .title-bar{
+    height: 3%;
+  	font-family: 'Krub', sans-serif;
+  	text-align: center;
+  	line-height: 18px;
+  	vertical-align: top;
+  	background: #34495e;
+  	font-size: 15px;
+  	color: #FFFFFF;
+  }
+
+
   </style>
 </head>
-
 <body>
-  
-  
+  <div class="main-heading">Where Should I dine tonight?</div>
+  <div class = "title-bar">A Comparitive Study of Ratings v.s. Reviews</div>
+  <div class="btn-group">
+    <button type="button" id="all" class="btn btn-primary" title="View all restaurants"><img src="https://img.icons8.com/color/48/000000/restaurant-building.png"></button> &nbsp
+    <button type="button" id="mexican" class="btn btn-primary" title="Mexican"><img src="https://img.icons8.com/color/48/000000/taco.png"></button> &nbsp
+    <button type="button" id="italian" class="btn btn-primary" title="Italian"><img src="https://img.icons8.com/color/48/000000/spaghetti.png"></button> &nbsp
+    <button type="button" id="pizza" class="btn btn-primary" title="Pizzas"><img src="https://img.icons8.com/color/48/000000/pizza.png"></button> &nbsp
+    <button type="button" id="burger" class="btn btn-primary" title="Burgers"><img src="https://img.icons8.com/color/48/000000/hamburger.png"></button> &nbsp
+    <button type="button" id="coffeetea" class="btn btn-primary" title="Cafes"><img src="https://img.icons8.com/color/48/000000/tea.png"></button> &nbsp
+    <button type="button" id="salad" class="btn btn-primary" title="Salads"><img src="https://img.icons8.com/color/48/000000/lettuce.png"></button> &nbsp
+  </div>
   <div id="map"></div>
-  
-  
-  
+  <div id="mySidepanel" class="sidepanel" style="width:0px;">
+    <a href="javascript:void(0)" class="closebtn" onclick="CloseNav()">&times;</a>
+    <div id="accordion" class="panel-group">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a id="resName" data-toggle="collapse" data-parent="#accordion" href="#collapseZero">Name</a>
+          </h4>
+        </div>
+        <div id="collapseZero" class="panel-collapse collapse">
+          <div id ="resAddress" class="panel-body">
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">Timings</a>
+          </h4>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse">
+          <div id ="resTimings" class="panel-body-un">
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">Ratings</a>
+          </h4>
+        </div>
+        <div id="collapseTwo" class="panel-collapse collapse in">
+          <div class="panel-body">
+            <div id="resRatings">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">Attributes</a>
+          </h4>
+        </div>
+        <div id="collapseThree" class="panel-collapse collapse">
+          <div class="panel-body">
+            <p>Attributes goes here</p>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour">Word Cloud</a>
+          </h4>
+        </div>
+        <div id="collapseFour" class="panel-collapse collapse">
+          <div class="panel-body">
+            <p>Word Cloud goes here</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   <script>
-    d3.csv("data/phoenix_burger_restaurants.csv", function(error, data){
-        // console.log(data[0]);
-        var points = [];
-        for(var i = 0; i < data.length; i++) {
-            points.push({latlng: [data[i].latitude, data[i].longitude], stars: data[i].stars});
-        }
-    
-        var pointsGroup = L.layerGroup();
-        points.forEach(function(d){
-          
-            // binding data to marker object's option
-            L.marker(d.latlng, { achieve: d.achieve })
-                .on("mouseover", onMouseOver)
-                .on("mouseout", onMouseOut)
-                .addTo(pointsGroup);
-        });
+  var prev;
+  // function over(id) {
+  //   document.getElementById(id).innerHTML="You have hovered mouse over me";
+  // }
+  function CloseNav() {
+    document.getElementById("mySidepanel").style.width = "0";
+  }
+  var layer1 = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    subdomains: 'abcd',
+    maxZoom: 19
+  }),
+  layer2 = L.tileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png', {
+    attribution: '<a href="https://wikimediafoundation.org/wiki/Maps_Terms_of_Use">Wikimedia</a>',
+    maxZoom: 19
+  });
 
-        var layer1 = L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
-                detectRetina: true,
-                attribution: "&copy; " + "<a href='http://openstreetmap.org'>OpenStreetMap</a>" + " Contributors"
-            }),
-            layer2 = L.tileLayer("http://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png", {
-                attribution: "Thunderforest"
-            }),
-            layer3 = L.tileLayer.wms("http://basemap.nationalmap.gov/ArcGIS/services/USGSImageryTopo/MapServer/WMSServer", {
-                layers: "0",
-                format: "image/png",
-                transparent: false,
-                attribution: "USGS"
+  var baseLayers = {
+    "Minimal": layer1,
+    "Detailed": layer2
+  };
+  var pointsGroup = L.layerGroup();
+  var markerClusters = new L.markerClusterGroup();
+  var map = L.map("map", {
+    center: [33.448376, -112.074036],
+    zoom: 10,
+    layers: layer1
+  });
+
+  L.control.layers(baseLayers, {position: "topleft"}).addTo(map);
+
+  var unactiveIcon = new L.Icon({
+              iconUrl: 'https://image.flaticon.com/icons/svg/1516/1516034.svg',
+              iconSize: [50, 41],
+              iconAnchor: [12, 41],
+              popupAnchor: [1, -34],
+              shadowSize: [41, 41]
+            });
+  var activeIcon = new L.Icon({
+              iconUrl: 'https://image.flaticon.com/icons/svg/1516/1516233.svg',
+              shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+              iconSize: [50, 41],
+              iconAnchor: [12, 41],
+              popupAnchor: [1, -34],
+              shadowSize: [41, 41]
             });
 
-        var baseLayers = {
-                "osm": layer1,
-                "thunderforest": layer2
-            },
-            subLayers = { "USGS": layer3, "Points": pointsGroup };
+  function openNav(e, points){
+    var point = map.latLngToContainerPoint(e.latlng);
+    var stars = 0.0;
+    var name = '';
+    var hours = 'NA';
+    var address = 'NA';
+    var hoursdict = {};
+    for(var i = 0; i < points.length; i++) {
+      if(points[i].latlng[0] == e.latlng.lat && points[i].latlng[1] == e.latlng.lng) {
+        name = points[i].name;
+        if(points[i].address != undefined) {
+          address = points[i].address;
+        }
+        stars = points[i].stars;
+        if(points[i].hours != '') {
+          hours = points[i].hours;
+        }
+      }
+    }
 
-        var map = L.map("map", {
-            center: [33.448376, -112.074036],
-            zoom: 10,
-            layers: [layer1, pointsGroup]
+    if(hours != 'NA') {
+      hours = hours.replace("{", "");
+      hours = hours.replace("}", "");
+      hours = hours.split(",");
+      for(var i = 0; i < hours.length; i++) {
+        if(hours[i].includes('Monday')) {
+          hoursdict['Monday'] = hours[i].split(": ")[1].split("'")[1];
+        }else if(hours[i].includes('Tuesday')) {
+          hoursdict['Tuesday'] = hours[i].split(": ")[1].split("'")[1];
+        }else if(hours[i].includes('Wednesday')) {
+          hoursdict['Wednesday'] = hours[i].split(": ")[1].split("'")[1];
+        }else if(hours[i].includes('Thursday')) {
+          hoursdict['Thursday'] = hours[i].split(": ")[1].split("'")[1];
+        }else if(hours[i].includes('Friday')) {
+          hoursdict['Friday'] = hours[i].split(": ")[1].split("'")[1];
+        }else if(hours[i].includes('Saturday')) {
+          hoursdict['Saturday'] = hours[i].split(": ")[1].split("'")[1];
+        }else {
+          hoursdict['Sunday'] = hours[i].split(": ")[1].split("'")[1];
+        }
+      }
+      hours = "<table>" +
+      "<tr>" +
+      "<th>Days</th>" +
+      "<th>Hours</th>" +
+      "</tr>" +
+      "<tr>" +
+      "<td>Monday</td>" +
+      "<td>" + hoursdict['Monday'] + "</td>" +
+      "</tr>" +
+      "<tr>" +
+      "<td>Tuesday</td>" +
+      "<td>" + hoursdict['Tuesday'] + "</td>" +
+      "</tr>" +
+      "<tr>" +
+      "<td>Wednesday</td>" +
+      "<td>" + hoursdict['Wednesday'] + "</td>" +
+      "</tr>" +
+      "<tr>" +
+      "<td>Thursday</td>" +
+      "<td>" + hoursdict['Thursday'] + "</td>" +
+      "</tr>" +
+      "<tr>" +
+      "<td>Friday</td>" +
+      "<td>" + hoursdict['Friday'] + "</td>" +
+      "</tr>" +
+      "<tr>" +
+      "<td>Saturday</td>" +
+      "<td>" + hoursdict['Saturday'] + "</td>" +
+      "</tr>" +
+      "<tr>" +
+      "<td>Sunday</td>" +
+      "<td>" + hoursdict['Sunday'] + "</td>" +
+      "</tr>" +
+      "</table>";
+    }
+
+    var nameHtml = name;
+    var addressHtml = address;
+    var timingHtml  = hours;
+    var starHtml = "";
+    var isInt = false;
+
+
+    //This part of code writes html for stars. Full or half based on ratings
+    if(stars-Math.floor(stars) == 0){
+      isInt = true;
+    }
+    var i = 1
+    for(; i <= Math.floor(stars); i++){
+      starHtml = starHtml + "<span class=\"star on\"></span>";
+    }
+    i--;
+    if(!isInt){
+      starHtml = starHtml + "<span class=\"star half\"></span>";
+    }
+
+    d3.select("#resName").html("<span style='color:red;font-weight:bold'>"+nameHtml+"</span><br/>").attr("fill", "red");
+    d3.select("#resAddress").html(addressHtml);
+    d3.select("#resTimings").html("<span>"+timingHtml+"</span>");
+    d3.select("#resRatings").html(starHtml);
+
+  }
+
+  function popupContent(e, points){
+    var name, stars;
+    for(var i = 0; i < points.length; i++) {
+      if(points[i].latlng[0] == e.latlng.lat && points[i].latlng[1] == e.latlng.lng) {
+        name = points[i].name;
+        stars = points[i].stars;
+      }
+    }
+    var html = "<div><span style='color:red;font-weight:bold'>" + name + "</span><br/>" + "<span><b> Rating: </b>" + stars + "</span><br/></div>";
+    return html;
+  }
+
+  function onMouseOut(e){
+     d3.select(map.getContainer()).select(".tooltip").remove();
+  }
+
+  Promise.all([
+    d3.csv("data/top_10_mexican_restaurants.csv"),
+    d3.csv("data/top_10_italian_restaurants.csv"),
+    d3.csv("data/top_10_pizza_restaurants.csv"),
+    d3.csv("data/top_10_burger_restaurants.csv"),
+    d3.csv("data/top_10_coffeetea_restaurants.csv"),
+    d3.csv("data/top_10_salad_restaurants.csv"),
+  ]).then(function(files) {
+      document.getElementById("mySidepanel").style.width = "20%";
+      function renderData(data) {
+        var isClicked = false;
+        var points = [];
+        for(var i = 0; i < data.length; i++) {
+          points.push(
+            {
+              name: data[i].name,
+              address: data[i].address,
+              hours: data[i].hours,
+              latlng: [data[i].latitude, data[i].longitude],
+              stars: data[i].stars
+            });
+        }
+        map.removeLayer(markerClusters);
+        var currIcon = unactiveIcon;
+        
+        var marker = null;
+        pointsGroup = L.layerGroup();
+        markerClusters = new L.markerClusterGroup();
+
+        points.forEach(function(d){
+          marker = L.marker(d.latlng, {icon: currIcon, achieve: d.achieve })
+          .addTo(pointsGroup)
+          .on("click", clickFunc)
+          .on('mouseover', function (e) {
+              this.bindPopup(popupContent(e, points));
+              this.openPopup();
+          });
+          markerClusters.addLayer(marker);
+          marker.on('mouseout', function (e) {
+              this.closePopup();
+          });
         });
+        map.addLayer(markerClusters);
+        
+        function clickFunc(p){
+          document.getElementById("mySidepanel").style.width = "20%";
+          openNav(p, points);
+          //This part of code turns previous restaurant icon back to blue
+          if(prev){
+            prev.target.setIcon(unactiveIcon);
+          }
 
-        L.control.layers(baseLayers, subLayers, {position: "topright"}).addTo(map);
-
-
-
-
-        function onMouseOver(e){
-            var point = map.latLngToContainerPoint(e.latlng);
-            // console.log(e.latlng);
-            // console.log(points);
-            var stars = 0.0;
-            for(var i = 0; i < points.length; i++) {
-                if(points[i].latlng[0] == e.latlng.lat && points[i].latlng[1] == e.latlng.lng) {
-                    stars = points[i].stars;
-                }
-            }
-            // console.log(stars);
-            // console.log(e);
-            var tooltip = d3.select(map.getContainer())
-                .append("div")
-                .attr("class", "tooltip")
-                // Calculating according to marker and tooltip size
-                .style({ left: point.x - 40 + "px", top: point.y - 80 - 41 + "px" })
-                .node();
-            console.log(tooltip);
-            getPie(tooltip, stars);
+          isClicked = !isClicked;
+          currIcon = activeIcon;
+          p.target.setIcon(currIcon);
+          prev = p;
         }
-        function onMouseOut(e){
-            d3.select(map.getContainer()).select(".tooltip").remove();
+      }
+
+      var data = files[0];
+      for(var i = 1; i < files.length; i++) {
+        data = data.concat(files[i]);
+      }
+      renderData(data);
+      $("#all").click(function() {
+        var data = files[0];
+        for(var i = 1; i < files.length; i++) {
+          data = data.concat(files[i]);
         }
-        function getPie(node, value){
-            // console.log(value);
-            var size = 70;
-            var arc = d3.svg.arc().outerRadius(size / 2).innerRadius(size / 3),
-                pie = d3.layout.pie().sort(null);
-            d3.select(node).append("svg")
-                .attr({ width: size, height: size })
-                .append("g")
-                .attr("transform", "translate(" + [size / 2, size / 2] + ")")
-                .call(function(s){
-                    s.append("text")
-                     .text(d3.format(".2p")(value))
-                     .style("font", "12px")
-                     .attr({ "text-anchor": "middle", "alignment-baseline": "central" });
-                })
-                .selectAll("path")
-                .data(pie([value, 5.0 - value]))
-                .enter()
-                .append("path")
-                .attr({
-                    d: arc,
-                    fill: function(d,i){ return i ? "gray" : "red"; }
-                });
-        }
-    });
-  </script>
+        renderData(data);
+      });
+      $("#mexican").click(function() {
+        data = files[0];
+        renderData(data);
+      });
+      $("#italian").click(function() {
+        data = files[1];
+        renderData(data);
+      });
+      $("#pizza").click(function() {
+        data = files[2];
+        renderData(data);
+      });
+      $("#burger").click(function() {
+        data = files[3];
+        renderData(data);
+      });
+      $("#coffeetea").click(function() {
+        data = files[4];
+        renderData(data)
+      });
+      $("#salad").click(function() {
+        data = files[5];
+        renderData(data);
+      });
+    }).catch(function(err) {
+      // handle error here
+  });
+  
+</script>
 </body>
