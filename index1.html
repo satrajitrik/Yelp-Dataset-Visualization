@@ -279,9 +279,7 @@
   </div>
   <script>
   var prev;
-  // function over(id) {
-  //   document.getElementById(id).innerHTML="You have hovered mouse over me";
-  // }
+  
   function CloseNav() {
     document.getElementById("mySidepanel").style.width = "0";
   }
@@ -345,6 +343,18 @@
         if(points[i].hours != '') {
           hours = points[i].hours;
         }
+
+        // Processing data to get time based graph for ratings
+        for(id in reviews_by_business){
+          if(reviews_by_business[id].key==points[i].business_id){
+            var star_chart_data = reviews_by_business[id].values
+            star_chart_data = star_chart_data.sort(function(x, y){
+              return new Date(x.date) - new Date(y.date);
+            })
+            break;
+          }
+        }     
+        draw_rating_time_chart(star_chart_data);
       }
     }
 
@@ -509,6 +519,7 @@
     d3.csv("data/top_10_burger_restaurants.csv"),
     d3.csv("data/top_10_coffeetea_restaurants.csv"),
     d3.csv("data/top_10_salad_restaurants.csv"),
+    d3.csv("data/reviews_phoenix.csv")
   ]).then(function(files) {
       document.getElementById("mySidepanel").style.width = "20%";
       function renderData(data) {
@@ -602,6 +613,154 @@
     }).catch(function(err) {
       // handle error here
   });
+  // function to draw time rating chart
+  function draw_rating_time_chart(rating_data){
+
+    d3.select("svg").remove();
+
+    if(rating_data)
+    {
+      console.log(rating_data[0].date);
+      console.log(rating_data[rating_data.length - 1].date);
+
+      var div_width = (document.getElementById("mySidepanel").offsetWidth )-40;
+      var div_height = 150;
+
+      var min_date = new Date(rating_data[0].date);
+      var max_date = new Date(rating_data[rating_data.length - 1].date);
+
+      var margin = {top: 25, right: 50, bottom: 10, left: 50}
+      , width = div_width - margin.left - margin.right  
+      , height = div_height - margin.top - margin.bottom; 
+      
+      var svg = d3.select("#rating_time_chart").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom+50)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");  
+      
+      var xScale = d3.scaleTime()
+        .domain([min_date, max_date]) // input
+        .range([0, width]); // output
+
+      var yScale = d3.scaleLinear()
+        .domain([0, 5]) // input 
+        .range([height, 0]); // output 
+
+      var line = d3.line()
+        .x(function(d, i) { return xScale(new Date(d.date)); }) 
+        .y(function(d) { return yScale(d.stars); }) 
+
+      var xAxis = d3.axisBottom(xScale).tickSize(3).ticks(5);
   
+        var yAxis = d3.axisLeft(yScale).tickSize(3).ticks(5);
+
+        svg.append("text")
+          .attr("class", "chartHeading")
+              .attr("x", 0.5*width)
+              .attr("y", -10)
+              .style("text-anchor", "middle")
+              .attr("fill","#909497")
+              .attr("font-family","Krub")
+              .attr("font-size", "12px")
+              .attr("font-weight", "bold") 
+              .text("Evolution Of Rating w.r.t Time");
+
+      svg.append("g")
+        .attr("class", "axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+
+      svg.append("g")
+        .attr("class", "axis")
+        .call(yAxis);
+
+      // text label for the x axis
+        svg.append("text")
+              .attr("font-family","Krub")
+              .attr("font-size", "12px")
+              .attr("font-weight", "bold") 
+              .attr("fill","#909497")      
+          .attr("transform",
+            "translate(" + (width/2) + " ," + 
+            (height+40) + ")")
+            .style("text-anchor", "middle")
+            .text("Date");
+
+        // text label for the y axis
+        svg.append("text")
+            .attr("font-family","Krub")
+              .attr("font-size", "12px") 
+              .attr("font-weight", "bold")
+              .attr("fill","#909497")  
+            .attr("transform", "rotate(-90)")
+            .attr("y",-50)
+            .attr("x",0 - (height / 2))
+            .attr("dy", "1em")
+            .style("text-anchor", "middle")
+            .text("Rating");
+
+      svg.append("path")
+          .datum(rating_data) // 10. Binds data to the line 
+          .style("fill","none")
+          .style("stroke","#e67e22" )
+          .attr("class", "line") // Assign a class for styling 
+          .attr("d", line); // 11. Calls the line generator   
+
+      svg.selectAll(".dot")
+          .data(rating_data)
+          .enter().append("circle") // Uses the enter().append() method
+          .attr("class", "dot") // Assign a class for styling
+          .attr("cx", function(d, i) {
+            return xScale(new Date(d.date)) })
+          .attr("cy", function(d) {
+            return yScale(d.stars) 
+          })
+          .attr("r",2)
+          .style("fill","#e67e22")
+            .on("mouseover", function(d) {
+              d3.select(this).attr("r",4);
+          
+          svg.append("line")
+                .attr('class','joinLine')
+                      .attr("x1", xScale(new Date(d.date)))
+                      .attr("y1", yScale(d.stars))
+                      .attr("x2", xScale(min_date))
+                      .attr("y2", yScale(d.stars))
+                      .attr("stroke-width", 1)
+                      .attr("stroke-dasharray", "2 2")
+                      .attr("stroke", "#909497");
+
+          svg.append("line")
+                .attr('class','joinLine')
+                      .attr("x1", xScale(new Date(d.date)))
+                      .attr("y1", yScale(0))
+                      .attr("x2", xScale(new Date(d.date)))
+                      .attr("y2", yScale(d.stars))
+                      .attr("stroke-width", 1)
+                      .attr("stroke-dasharray", "2 2")
+                      .attr("stroke", "#909497");
+
+                  var cur_date = d.date.toString();
+
+                  svg.append("text")
+                  .attr("class", "joinLine")
+                  .attr("x", xScale(new Date(d.date)))
+                  .attr("y", yScale(0)+25)
+                  .style("text-anchor", "middle")
+                  .attr("fill","#909497")
+                  .attr("font-family","Krub")
+                  .attr("font-size", "10px")
+                  .attr("font-weight", "bold") 
+                  .text(cur_date);
+                      
+        })
+            .on("mouseout", function() { 
+              d3.select(this).attr("r",2);
+              svg.selectAll('.joinLine').remove(); 
+            })
+    }   
+
+  }
 </script>
 </body>
