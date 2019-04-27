@@ -226,7 +226,7 @@
 
 /* star rating */
 .dropdown-content{
-  color: #D3D3D3;
+  color: #1d1e1f;;
   height: 2%;
   width: auto;
   margin-left: 2px;
@@ -234,6 +234,7 @@
   border-color: #FFFFFF;
   vertical-align: middle;
   text-align: center;
+  cursor: grab;
 }
 
 /* slider css */
@@ -274,7 +275,7 @@ input[type="range"] {
     height: 0px;
     width: 0px;
     /* border: 3px solid #999; */
-    border-radius: 0 !important;
+    /* border-radius: 0 !important; */
     box-shadow: -100vw 0 0 100vw #F08080;
     box-sizing: border-box;
 }
@@ -376,9 +377,9 @@ label:hover ~ input:checked ~ label /* highlight previous selected stars */ { co
       <span class="dropdown-content" style="color:#1B2631; float:left; margin-left:5px;">0</span>
       <span class="dropdown-content" style="color:#1B2631; margin-left:40%;" class="slider__value" id="sliderval">50</span>
       <span class="dropdown-content" style="color:#1B2631; float:right; margin-right:5px;">100</span>
-      <input type="range" class = " dropdown-item slider__range" autocomplete="off">
+      <input type="range" class = " dropdown-item slider__range" style="background-color: #FFF;" autocomplete="off">
       <div class="dropdown-content" style="color:#1B2631; width:auto; margin-top:10px">Star Rating</div>
-      <fieldset class="rate dropdown-content dropdown-item" style="margin-left:10%;" autocomplete="off">
+      <fieldset class="rate dropdown-content dropdown-item" style="margin-left:10%; background-color: #FFF;" autocomplete="off">
         <input type="radio" id="rating10" class="dropdown-content" name="rating" value="10" autocomplete="off"/><label for="rating10" title="5 stars"></label>
         <input type="radio" id="rating9" class="dropdown-content" name="rating" value="9" autocomplete="off"/><label class="half" for="rating9" title="4 1/2 stars"></label>
         <input type="radio" id="rating8" class="dropdown-content" name="rating" value="8" autocomplete="off"/><label for="rating8" title="4 stars"></label>
