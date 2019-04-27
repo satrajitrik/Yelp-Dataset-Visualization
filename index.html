@@ -226,7 +226,7 @@
 
 /* star rating */
 .dropdown-content{
-  color: #FFFFFF;
+  color: #D3D3D3;
   height: 2%;
   width: auto;
   margin-left: 2px;
@@ -243,7 +243,7 @@ input[type="range"] {
     position: relative;
     overflow: hidden;
     height: 10px;
-    width: 150px;
+    width: auto;
     cursor: grab;
     border-radius: 0; /* iOS */
 }
@@ -338,7 +338,8 @@ input[type="range"] {
 }
 /* Zero stars rating */
 .rate > label:last-child:before {
-    content: "\f006 "; /* empty star outline */
+    content: "\f00d"; /* empty star outline */
+    color: #FF0000;
 }
 /* Half star trick */
 .rate .half:before {
@@ -371,8 +372,13 @@ label:hover ~ input:checked ~ label /* highlight previous selected stars */ { co
     <button type="button" id="salad" class="btn btn-primary" title="Salads"><img src="https://img.icons8.com/color/48/000000/lettuce.png"></button> &nbsp
     <button type="button" id="dropdownMenuButton" class="btn btn-primary dropdown-toggle" title="Filter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="https://img.icons8.com/ios/50/000000/sorting-options.png"></button> &nbsp
     <div class="dropdown-menu" aria-labelledby="">
+      <div class="dropdown-content" style="color:#1B2631; width:auto; margin-top:10px">Sentiment Rating</div>
+      <span class="dropdown-content" style="color:#1B2631; float:left; margin-left:5px;">0</span>
+      <span class="dropdown-content" style="color:#1B2631; margin-left:40%;" class="slider__value" id="sliderval">50</span>
+      <span class="dropdown-content" style="color:#1B2631; float:right; margin-right:5px;">100</span>
       <input type="range" class = " dropdown-item slider__range" autocomplete="off">
-      <fieldset class="rate dropdown-content dropdown-item" autocomplete="off">
+      <div class="dropdown-content" style="color:#1B2631; width:auto; margin-top:10px">Star Rating</div>
+      <fieldset class="rate dropdown-content dropdown-item" style="margin-left:10%;" autocomplete="off">
         <input type="radio" id="rating10" class="dropdown-content" name="rating" value="10" autocomplete="off"/><label for="rating10" title="5 stars"></label>
         <input type="radio" id="rating9" class="dropdown-content" name="rating" value="9" autocomplete="off"/><label class="half" for="rating9" title="4 1/2 stars"></label>
         <input type="radio" id="rating8" class="dropdown-content" name="rating" value="8" autocomplete="off"/><label for="rating8" title="4 stars"></label>
@@ -383,13 +389,12 @@ label:hover ~ input:checked ~ label /* highlight previous selected stars */ { co
         <input type="radio" id="rating3" class="dropdown-content" name="rating" value="3" autocomplete="off"/><label class="half" for="rating3" title="1 1/2 stars"></label>
         <input type="radio" id="rating2" class="dropdown-content" name="rating" value="2" autocomplete="off"/><label for="rating2" title="1 star"></label>
         <input type="radio" id="rating1" class="dropdown-content" name="rating" value="1" autocomplete="off"/><label class="half" for="rating1" title="1/2 star"></label>
-        <input type="radio" id="rating0" class="dropdown-content" name="rating" value="0" autocomplete="off"/><label for="rating0" title="No star"></label>
+        <input type="radio" id="rating0" class="dropdown-content" name="rating" value="0" autocomplete="off"/><label for="rating0" title="Clear Rating"></label>
      </fieldset>
     </div>
   </div>
   <div id="map"></div>
   <div id="mySidepanel" class="sidepanel" style="width:0px;">
-    <!-- <a href="javascript:void(0)" class="closebtn" onclick="CloseNav()">&times;</a> -->
     <div id="accordion" class="panel-group">
       <div class="panel panel-default">
         <div class="panel-heading">
@@ -464,25 +469,25 @@ label:hover ~ input:checked ~ label /* highlight previous selected stars */ { co
 
 
 //slider js
-// var rangeSlider = function(){
-//   var slider = $('.slider__range'),
-//       range = $('.slider__range'),
-//       value = $('.slider__value');
-//
-//   slider.each(function(){
-//
-//     value.each(function(){
-//       var value = $(this).prev().attr('value');
-//       $(this).html(value);
-//     });
-//
-//     range.on('input', function(){
-//       $(this).next(value).html(this.value);
-//     });
-//   });
-// };
-//
-// rangeSlider();
+var rangeSlider = function(){
+  var slider = $('.slider__range'),
+      range = $('.slider__range'),
+      value = $('.slider__value');
+  slider.each(function(){
+
+    value.each(function(){
+      var value = $(this).prev().attr('value');
+      $(this).html(value);
+    });
+
+    range.on('input', function(){
+      $("#sliderval").html(this.value);
+      // $(this).prev(value).html(this.value);
+    });
+  });
+};
+
+rangeSlider();
 
 // Initialize a new plugin instance for all
    // e.g. $('input[type="range"]') elements.
