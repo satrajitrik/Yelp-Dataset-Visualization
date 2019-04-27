@@ -4,6 +4,7 @@
   <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css">
   <link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/MarkerCluster.css" />
   <link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/MarkerCluster.Default.css" />
+  <link rel="stylesheet" type="text/css" href="/sliderjs/rangeslider.css"/>
 
   <link href="https://fonts.googleapis.com/css?family=Krub|Medula+One|Lily+Script+One" rel="stylesheet">
 
@@ -13,7 +14,10 @@
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+  <script src="sliderjs/rangeslider.js"></script>
+  <script src="sliderjs/rangeslider.min.js"></script>
   <style>
   body {
     margin:0;
@@ -150,6 +154,7 @@
     background-color: #D3D3D3;
     overflow: hidden;
   }
+
   .btn-group{
     display: inline-block;
     text-align: center;
@@ -214,6 +219,143 @@
     -moz-transform: rotate(180deg);
     transform: rotate(180deg);
   }
+
+  .slidecontainer {
+  width: 100%; /* Width of the outside container */
+}
+
+/* star rating */
+.dropdown-content{
+  color: #FFFFFF;
+  height: 2%;
+  width: auto;
+  margin-left: 2px;
+  background-color: #FFFFFF;
+  border-color: #FFFFFF;
+  vertical-align: middle;
+  text-align: center;
+}
+
+/* slider css */
+input[type="range"] {
+    margin: auto;
+    -webkit-appearance: none;
+    position: relative;
+    overflow: hidden;
+    height: 10px;
+    width: 150px;
+    cursor: grab;
+    border-radius: 0; /* iOS */
+}
+
+::-webkit-slider-runnable-track {
+    background: #F08080;
+}
+
+/*
+ * 1. Set to 0 width and remove border for a slider without a thumb
+ */
+::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 0px; /* 1 */
+    height: 20px;
+    background: #fff;
+    box-shadow: -100vw 0 0 100vw #F08080;
+    /* border: 2px solid #999; /* 1 */ */
+}
+
+::-moz-range-track {
+    height: 40px;
+    background: #ddd;
+}
+
+::-moz-range-thumb {
+    background: #fff;
+    height: 0px;
+    width: 0px;
+    /* border: 3px solid #999; */
+    border-radius: 0 !important;
+    box-shadow: -100vw 0 0 100vw #F08080;
+    box-sizing: border-box;
+}
+
+::-ms-fill-lower {
+    background: #F08080;
+}
+
+::-ms-thumb {
+    background: #fff;
+    border: 2px solid #999;
+    height: 40px;
+    width: 20px;
+    box-sizing: border-box;
+}
+
+::-ms-ticks-after {
+    display: none;
+}
+
+::-ms-ticks-before {
+    display: none;
+}
+
+::-ms-track {
+    background: #ddd;
+    color: transparent;
+    height: 40px;
+    border: none;
+}
+
+::-ms-tooltip {
+    display: none;
+}
+
+/* Ratings widget */
+/* @import url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css); */
+
+.rate {
+    display: inline-block;
+    border: 0;
+    margin-left: 10px;
+}
+/* Hide radio */
+.rate > input {
+    display: none;
+}
+/* Order correctly by floating highest to the right */
+.rate > label {
+    float: right;
+}
+/* The star of the show */
+.rate > label:before {
+    display: inline-block;
+    font-size: 1.1rem;
+    padding: .3rem .2rem;
+    margin: 0;
+    cursor: pointer;
+    font-family: FontAwesome;
+    content: "\f005"; /* full star */
+}
+/* Zero stars rating */
+.rate > label:last-child:before {
+    content: "\f006 "; /* empty star outline */
+}
+/* Half star trick */
+.rate .half:before {
+    content: "\f089 "; /* half star no outline */
+    position: absolute;
+    padding-right: 0;
+}
+/* Click + hover color */
+input:checked ~ label, /* color current and previous stars on checked */
+label:hover, label:hover ~ label { color: #FFD700;  } /* color previous stars on hover */
+
+/* Hover highlights */
+input:checked + label:hover, input:checked ~ label:hover, /* highlight current and previous stars */
+input:checked ~ label:hover ~ label, /* highlight previous selected stars for new rating */
+label:hover ~ input:checked ~ label /* highlight previous selected stars */ { color: #FFD700;  }
+
+
   </style>
 </head>
 <body>
@@ -227,7 +369,23 @@
     <button type="button" id="burger" class="btn btn-primary" title="Burgers"><img src="https://img.icons8.com/color/48/000000/hamburger.png"></button> &nbsp
     <button type="button" id="coffeetea" class="btn btn-primary" title="Cafes"><img src="https://img.icons8.com/color/48/000000/tea.png"></button> &nbsp
     <button type="button" id="salad" class="btn btn-primary" title="Salads"><img src="https://img.icons8.com/color/48/000000/lettuce.png"></button> &nbsp
-    <!-- <button type="button" id="filter" class="btn btn-primary" title="Filter"><img src="https://img.icons8.com/dusk/64/000000/sorting-options.png"></button>&nbsp -->
+    <button type="button" id="dropdownMenuButton" class="btn btn-primary dropdown-toggle" title="Filter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="https://img.icons8.com/ios/50/000000/sorting-options.png"></button> &nbsp
+    <div class="dropdown-menu" aria-labelledby="">
+      <input type="range" class = " dropdown-item slider__range" autocomplete="off">
+      <fieldset class="rate dropdown-content dropdown-item" autocomplete="off">
+        <input type="radio" id="rating10" class="dropdown-content" name="rating" value="10" autocomplete="off"/><label for="rating10" title="5 stars"></label>
+        <input type="radio" id="rating9" class="dropdown-content" name="rating" value="9" autocomplete="off"/><label class="half" for="rating9" title="4 1/2 stars"></label>
+        <input type="radio" id="rating8" class="dropdown-content" name="rating" value="8" autocomplete="off"/><label for="rating8" title="4 stars"></label>
+        <input type="radio" id="rating7" class="dropdown-content" name="rating" value="7" autocomplete="off"/><label class="half" for="rating7" title="3 1/2 stars"></label>
+        <input type="radio" id="rating6" class="dropdown-content" name="rating" value="6" autocomplete="off"/><label for="rating6" title="3 stars"></label>
+        <input type="radio" id="rating5" class="dropdown-content" name="rating" value="5" autocomplete="off"/><label class="half" for="rating5" title="2 1/2 stars"></label>
+        <input type="radio" id="rating4" class="dropdown-content" name="rating" value="4" autocomplete="off"/><label for="rating4" title="2 stars"></label>
+        <input type="radio" id="rating3" class="dropdown-content" name="rating" value="3" autocomplete="off"/><label class="half" for="rating3" title="1 1/2 stars"></label>
+        <input type="radio" id="rating2" class="dropdown-content" name="rating" value="2" autocomplete="off"/><label for="rating2" title="1 star"></label>
+        <input type="radio" id="rating1" class="dropdown-content" name="rating" value="1" autocomplete="off"/><label class="half" for="rating1" title="1/2 star"></label>
+        <input type="radio" id="rating0" class="dropdown-content" name="rating" value="0" autocomplete="off"/><label for="rating0" title="No star"></label>
+     </fieldset>
+    </div>
   </div>
   <div id="map"></div>
   <div id="mySidepanel" class="sidepanel" style="width:0px;">
@@ -283,18 +441,67 @@
       <div class="panel panel-default">
         <div class="panel-heading">
           <h4 class="panel-title">
-            <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour">Word Cloud</a>
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour">Bubble Chart</a>
           </h4>
         </div>
         <div id="collapseFour" class="panel-collapse collapse">
           <div class="panel-body">
-            <p>Word Cloud goes here</p>
+            <div id="resBubble">
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
   <script>
+
+  // var slider = document.getElementById("myRange");
+  // var output = document.getElementById("demo");
+  // output.innerHTML = slider.value;
+  // slider.oninput = function() {
+  // output.innerHTML = this.value;
+  // }
+
+
+//slider js
+// var rangeSlider = function(){
+//   var slider = $('.slider__range'),
+//       range = $('.slider__range'),
+//       value = $('.slider__value');
+//
+//   slider.each(function(){
+//
+//     value.each(function(){
+//       var value = $(this).prev().attr('value');
+//       $(this).html(value);
+//     });
+//
+//     range.on('input', function(){
+//       $(this).next(value).html(this.value);
+//     });
+//   });
+// };
+//
+// rangeSlider();
+
+// Initialize a new plugin instance for all
+   // e.g. $('input[type="range"]') elements.
+   // $('input[type="range"]').rangeslider();
+
+   // Destroy all plugin instances created from the
+   // e.g. $('input[type="range"]') elements.
+   // $('input[type="range"]').rangeslider('destroy');
+
+   // Update all rangeslider instances for all
+   // e.g. $('input[type="range"]') elements.
+   // Usefull if you changed some attributes e.g. `min` or `max` etc.
+   // $('input[type="range"]').rangeslider('update', true);
+
+//pick slider value from here
+
+// var slider = document.getElementById("slider").value;
+
+
 
   $('.panel-collapse').on('show.bs.collapse', function () {
     $(this).siblings('.panel-heading').addClass('active');
@@ -305,9 +512,7 @@
   });
 
   var prev;
-  // function over(id) {
-  //   document.getElementById(id).innerHTML="You have hovered mouse over me";
-  // }
+
   function CloseNav() {
     document.getElementById("mySidepanel").style.width = "0";
   }
@@ -448,6 +653,35 @@
       starHtml = starHtml + "<span class=\"star half\"></span>";
     }
 
+    dataset = {
+              "children": [{"Name":"Olives","Count":4319},
+                  {"Name":"Tea","Count":4159},
+                  {"Name":"Mashed Potatoes","Count":2583},
+                  {"Name":"Boiled Potatoes","Count":2074},
+                  {"Name":"Milk","Count":1894},
+                  {"Name":"Chicken Salad","Count":1809},
+                  {"Name":"Vanilla Ice Cream","Count":1713},
+                  {"Name":"Cocoa","Count":1636},
+                  {"Name":"Lettuce Salad","Count":1566},
+                  {"Name":"Lobster Salad","Count":1511},
+                  {"Name":"Chocolate","Count":1489},
+                  {"Name":"Apple Pie","Count":1487},
+                  {"Name":"Orange Juice","Count":1423},
+                  {"Name":"American Cheese","Count":1372},
+                  {"Name":"Green Peas","Count":1341},
+                  {"Name":"Assorted Cakes","Count":1331},
+                  {"Name":"French Fried Potatoes","Count":1328},
+                  {"Name":"Potato Salad","Count":1306},
+                  {"Name":"Baked Potatoes","Count":1293},
+                  {"Name":"Roquefort","Count":1273},
+                  {"Name":"Stewed Prunes","Count":1268}]
+          };
+
+
+    //bubble chart code
+
+    bubblechart(400,dataset);
+
     d3.select("#resName").html("<span style='color:red;font-weight:bold'>"+nameHtml+"</span><br/>").attr("fill", "red");
     d3.select("#resAddress").html(addressHtml);
     d3.select("#resTimings").html("<span>"+timingHtml+"</span>");
@@ -570,5 +804,84 @@
       // handle error here
     });
 
+    function bubblechart(diameter, dataset){
+
+      var max = 0;
+
+      dataset.children.forEach(function(element){
+        if(element.Count>max){
+          max = element.Count;
+        }
+      });
+
+      var color = d3.scaleOrdinal(d3.schemeCategory10);
+
+      d3.select("#resBubble").html("");
+
+      var svg = d3.select("#resBubble")
+      .append("svg")
+      .attr("width", diameter)
+      .attr("height", diameter)
+      .attr("class", "bubble");
+
+      var bubble = d3.pack(dataset)
+      .size([diameter, diameter])
+      .padding(1.5);
+
+      var nodes = d3.hierarchy(dataset)
+      .sum(function(d) { return d.Count; });
+
+      var node = svg.selectAll(".node")
+      .data(bubble(nodes).descendants())
+      .enter()
+      .filter(function(d){
+        return  !d.children
+      })
+      .append("g")
+      .attr("class", "node")
+      .attr("transform", function(d) {
+        return "translate(" + d.x + "," + d.y + ")";
+      });
+
+      node.append("title")
+      .text(function(d) {
+        return d.Name + ": " + d.Count;
+      });
+
+      node.append("circle")
+      .attr("r", function(d) {
+        return d.r;
+      })
+      .style("fill", function(d,i) {
+        return color(i);
+      });
+
+      node.append("text")
+      .attr("dy", ".2em")
+      .style("text-anchor", "middle")
+      .text(function(d) {
+        return d.data.Name.substring(0, d.r / 3);
+      })
+      .attr("font-family", "sans-serif")
+      .attr("font-size", function(d){
+        return d.r/5;
+      })
+      .attr("fill", "white");
+
+      node.append("text")
+      .attr("dy", "1.3em")
+      .style("text-anchor", "middle")
+      .text(function(d) {
+        return d.data.Count;
+      })
+      .attr("font-family",  "Gill Sans", "Gill Sans MT")
+      .attr("font-size", function(d){
+        return d.r/5;
+      })
+      .attr("fill", "white");
+
+      d3.select(self.frameElement)
+      .style("height", diameter + "px");
+    }
     </script>
   </body>
