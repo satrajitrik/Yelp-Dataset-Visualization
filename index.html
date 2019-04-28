@@ -374,9 +374,9 @@ label:hover ~ input:checked ~ label /* highlight previous selected stars */ { co
     <button type="button" id="dropdownMenuButton" class="btn btn-primary dropdown-toggle" title="Filter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="https://img.icons8.com/ios/50/000000/sorting-options.png"></button> &nbsp
     <div class="dropdown-menu" aria-labelledby="">
       <div class="dropdown-content" style="color:#1B2631; width:auto; margin-top:10px">Sentiment Rating</div>
-      <span class="dropdown-content" style="color:#1B2631; float:left; margin-left:5px;">0</span>
-      <span class="dropdown-content" style="color:#1B2631; margin-left:40%;" class="slider__value" id="sliderval">50</span>
-      <span class="dropdown-content" style="color:#1B2631; float:right; margin-right:5px;">100</span>
+      <span class="dropdown-content" style="color:#1B2631; float:left; margin-left:5px;">-1</span>
+      <span class="dropdown-content" style="color:#1B2631; margin-left:40%;" class="slider__value" id="sliderval">0</span>
+      <span class="dropdown-content" style="color:#1B2631; float:right; margin-right:5px;">1</span>
       <input type="range" class = " dropdown-item slider__range" style="background-color: #FFF;" autocomplete="off">
       <div class="dropdown-content" style="color:#1B2631; width:auto; margin-top:10px">Star Rating</div>
       <fieldset class="rate dropdown-content dropdown-item" style="margin-left:10%; background-color: #FFF;" autocomplete="off">
@@ -482,7 +482,20 @@ var rangeSlider = function(){
     });
 
     range.on('input', function(){
-      $("#sliderval").html(this.value);
+      var value = this.value;
+      if(value > 50){
+        value = value - 50;
+        value = (value/100)
+        value += 0.5
+      }else if(value < 50){
+        value = ((50-value)/100);
+        value = -1 * value;
+        value -= 0.5
+      }else{
+        value = 0;
+      }
+      console.log(value);
+      $("#sliderval").html(value);
       // $(this).prev(value).html(this.value);
     });
   });
