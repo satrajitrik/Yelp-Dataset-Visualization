@@ -14,6 +14,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+  <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
   <style>
   body {
 	margin:0;
@@ -27,14 +28,14 @@
   #map{ 
 	position: fixed;
 	top: 15%;
-	width:75%; 
+	width:50%; 
 	height:85%;
   }
   /*.tooltip{ width: auto; height: auto; position: absolute; font-size: 12px; background-color: white;}*/
   table {
 	font-family: 'Krub', sans-serif;
 	border-collapse: collapse;
-	width: 75%;
+	width: 50%;
 	
 	}
 
@@ -154,6 +155,7 @@
 	display: inline-block;
 	text-align: center;
 	align-items: center;
+    width: 100%;
   }
   .btn-primary {
 	color: #fff;
@@ -196,13 +198,221 @@
   }
 
 
+  .panel-title>a, .panel-title>a:active{
+    display:block;
+    text-transform:uppercase;
+    text-decoration:none;
+  }
+
+  .panel-heading  a:before {
+    font-family: 'Helvetica';
+    content: url(https://img.icons8.com/metro/26/000000/circled-chevron-down.png);
+    float: right;
+    opacity: 0.5;
+    transition: all 0.5s;
+  }
+  .panel-heading.active a:before {
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    transform: rotate(180deg);
+  }
+
+  .slidecontainer {
+  width: 100%; /* Width of the outside container */
+}
+
+/* star rating */
+.dropdown-content{
+  color: #1d1e1f;;
+  height: 2%;
+  width: auto;
+  margin-left: 2px;
+  background-color: #FFFFFF;
+  border-color: #FFFFFF;
+  vertical-align: middle;
+  text-align: center;
+  cursor: grab;
+}
+
+/* slider css */
+input[type="range"] {
+    margin: auto;
+    -webkit-appearance: none;
+    position: relative;
+    overflow: hidden;
+    height: 10px;
+    width: auto;
+    cursor: grab;
+    border-radius: 0; /* iOS */
+}
+
+::-webkit-slider-runnable-track {
+    background: #F08080;
+}
+
+/*
+ * 1. Set to 0 width and remove border for a slider without a thumb
+ */
+::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 0px; /* 1 */
+    height: 20px;
+    background: #fff;
+    box-shadow: -100vw 0 0 100vw #F08080;
+    /* border: 2px solid #999; /* 1 */ */
+}
+
+::-moz-range-track {
+    height: 40px;
+    background: #ddd;
+}
+
+::-moz-range-thumb {
+    background: #fff;
+    height: 0px;
+    width: 0px;
+    /* border: 3px solid #999; */
+    /* border-radius: 0 !important; */
+    box-shadow: -100vw 0 0 100vw #F08080;
+    box-sizing: border-box;
+}
+
+::-ms-fill-lower {
+    background: #F08080;
+}
+
+::-ms-thumb {
+    background: #fff;
+    border: 2px solid #999;
+    height: 40px;
+    width: 20px;
+    box-sizing: border-box;
+}
+
+::-ms-ticks-after {
+    display: none;
+}
+
+::-ms-ticks-before {
+    display: none;
+}
+
+::-ms-track {
+    background: #ddd;
+    color: transparent;
+    height: 40px;
+    border: none;
+}
+
+::-ms-tooltip {
+    display: none;
+}
+
+/* Ratings widget */
+/* @import url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css); */
+
+.rate {
+    display: inline-block;
+    border: 0;
+    margin-left: 10px;
+}
+/* Hide radio */
+.rate > input {
+    display: none;
+}
+/* Order correctly by floating highest to the right */
+.rate > label {
+    float: right;
+}
+/* The star of the show */
+.rate > label:before {
+    display: inline-block;
+    font-size: 1.1rem;
+    padding: .3rem .2rem;
+    margin: 0;
+    cursor: pointer;
+    font-family: FontAwesome;
+    content: "\f005"; /* full star */
+}
+/* Zero stars rating */
+.rate > label:last-child:before {
+    content: "\f00d"; /* empty star outline */
+    color: #FF0000;
+}
+/* Half star trick */
+.rate .half:before {
+    content: "\f089 "; /* half star no outline */
+    position: absolute;
+    padding-right: 0;
+}
+/* Click + hover color */
+input:checked ~ label, /* color current and previous stars on checked */
+label:hover, label:hover ~ label { color: #FFD700;  } /* color previous stars on hover */
+
+/* Hover highlights */
+input:checked + label:hover, input:checked ~ label:hover, /* highlight current and previous stars */
+input:checked ~ label:hover ~ label, /* highlight previous selected stars for new rating */
+label:hover ~ input:checked ~ label /* highlight previous selected stars */ { color: #FFD700;  }
+
+
   /*Rating Chart Styles*/
   .axis
   {
   	font-family: 'Krub', sans-serif;
-    font-size: 10px;
+    font-size: 9px;
     font-weight: bold;            	
   	color: #909497;
+  }
+
+  .starBarChartHeading
+  {
+	font-family: 'Krub', sans-serif;
+	text-align: center;
+    font-size: 10px;
+    font-weight: bold;            	
+  	color: #909497;	
+  }
+  .sentiBarChartHeading
+  {
+	font-family: 'Krub', sans-serif;
+	text-align: center;
+    font-size: 10px;
+    font-weight: bold;            	
+  	color: #909497;	
+  }
+  .ResHeading{
+ 	font-family: 'Krub', sans-serif;
+	text-align: center;
+    font-size: 14px;
+    font-weight: bold;            	
+  	color: #000000;	
+  }
+
+  .bar {
+    fill: steelblue;
+  }
+
+  .bar:hover {
+    fill: #E67E22;
+  }
+
+  .axis--x path {
+    display: none;
+  }
+
+  div.tooltip {
+    color: white;
+    position: absolute;
+    text-align: center;
+    width: 100px;
+    height: 40px;
+    padding: 2px;
+    font-size: 12px;
+ 	font-family: 'Krub', sans-serif;
+ 	font-weight: bold;
+    background: rgba(0,0,0,.8);
+    border: 2px solid black;
+    pointer-events: none;
   }
 
   </style>
@@ -218,6 +428,29 @@
 	<button type="button" id="burger" class="btn btn-primary" title="Burgers"><img src="https://img.icons8.com/color/48/000000/hamburger.png"></button> &nbsp
 	<button type="button" id="coffeetea" class="btn btn-primary" title="Cafes"><img src="https://img.icons8.com/color/48/000000/tea.png"></button> &nbsp
 	<button type="button" id="salad" class="btn btn-primary" title="Salads"><img src="https://img.icons8.com/color/48/000000/lettuce.png"></button> &nbsp
+    <button type="button" id="dropdownMenuButton" class="btn btn-primary dropdown-toggle" title="Filter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="https://img.icons8.com/ios/50/000000/sorting-options.png"></button> &nbsp
+    <div class="dropdown-menu" aria-labelledby="">
+      <div class="dropdown-content" style="color:#1B2631; width:auto; margin-top:10px">Sentiment Rating</div>
+      <span class="dropdown-content" style="color:#1B2631; float:left; margin-left:5px;">-1</span>
+      <span class="dropdown-content" style="color:#1B2631; margin-left:40%;" class="slider__value" id="sliderval">0</span>
+      <span class="dropdown-content" style="color:#1B2631; float:right; margin-right:5px;">1</span>
+      <input onchange="filterSentiment(this.value)" type="range" id="slider_val" class = " dropdown-item slider__range" style="background-color: #FFF;" autocomplete="off">
+      <div class="dropdown-content" style="color:#1B2631; width:auto; margin-top:10px">Star Rating</div>
+      <fieldset id="ratingsInput" class="rate dropdown-content dropdown-item" style="margin-left:10%; background-color: #FFF;" autocomplete="off">
+        <input type="radio" id="rating10" class="dropdown-content" name="rating" value="10" autocomplete="off"/><label for="rating10" title="5 stars"></label>
+        <input type="radio" id="rating9" class="dropdown-content" name="rating" value="9" autocomplete="off"/><label class="half" for="rating9" title="4 1/2 stars"></label>
+        <input type="radio" id="rating8" class="dropdown-content" name="rating" value="8" autocomplete="off"/><label for="rating8" title="4 stars"></label>
+        <input type="radio" id="rating7" class="dropdown-content" name="rating" value="7" autocomplete="off"/><label class="half" for="rating7" title="3 1/2 stars"></label>
+        <input type="radio" id="rating6" class="dropdown-content" name="rating" value="6" autocomplete="off"/><label for="rating6" title="3 stars"></label>
+        <input type="radio" id="rating5" class="dropdown-content" name="rating" value="5" autocomplete="off"/><label class="half" for="rating5" title="2 1/2 stars"></label>
+        <input type="radio" id="rating4" class="dropdown-content" name="rating" value="4" autocomplete="off"/><label for="rating4" title="2 stars"></label>
+        <input type="radio" id="rating3" class="dropdown-content" name="rating" value="3" autocomplete="off"/><label class="half" for="rating3" title="1 1/2 stars"></label>
+        <input type="radio" id="rating2" class="dropdown-content" name="rating" value="2" autocomplete="off"/><label for="rating2" title="1 star"></label>
+        <input type="radio" id="rating1" class="dropdown-content" name="rating" value="1" autocomplete="off"/><label class="half" for="rating1" title="1/2 star"></label>
+        <input type="radio" id="rating0" class="dropdown-content" name="rating" value="0" autocomplete="off"/><label for="rating0" title="Clear Rating"></label>
+     </fieldset>
+    </div>
+  </div>
   </div>
   <div id="map"></div>
   <div id="mySidepanel" class="sidepanel" style="width:0px;">
@@ -234,60 +467,122 @@
 		  </div>
 		</div>
 	  </div>
-	  <div class="panel panel-default">
+	 <div class="panel panel-default">
 		<div class="panel-heading">
 		  <h4 class="panel-title">
-			<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">Timings</a>
-		  </h4>
-		</div>
-		<div id="collapseOne" class="panel-collapse collapse">
-		  <div id ="resTimings" class="panel-body-un">
-		  </div>
-		</div>
-	  </div>
-	  <div class="panel panel-default">
-		<div class="panel-heading">
-		  <h4 class="panel-title">
-			<a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">Ratings</a>
+			<a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" id="resRatings">Ratings</a>
 		  </h4>
 		</div>
 		<div id="collapseTwo" class="panel-collapse collapse in">
 		  <div class="panel-body">
-			<div id="resRatings">
-			</div>
 			<div id="rating_time_chart"></div>
 		  </div>
 		</div>
 	  </div>
 	  <div class="panel panel-default">
-		<div class="panel-heading">
-		  <h4 class="panel-title">
-			<a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">Attributes</a>
-		  </h4>
-		</div>
-		<div id="collapseThree" class="panel-collapse collapse">
-		  <div class="panel-body">
-			<p>Attributes goes here</p>
-		  </div>
-		</div>
-	  </div>
+    	<div class="panel-heading">
+      		<h4 class="panel-title">
+      			<a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">Footfall Distribution</a>
+      		</h4>
+    	</div>
+    	<div id="collapseThree" class="panel-collapse collapse in">
+      		<div class="panel-body">
+      			<div id="resOccupancies"></div>
+      			<div id="occupancy_chart"></div>
+      	 	</div>
+        </div>
+      </div>
 	  <div class="panel panel-default">
 		<div class="panel-heading">
 		  <h4 class="panel-title">
-			<a data-toggle="collapse" data-parent="#accordion" href="#collapseFour">Word Cloud</a>
+			<a data-toggle="collapse" data-parent="#accordion" href="#collapseFour">Bubble Chart</a>
 		  </h4>
 		</div>
 		<div id="collapseFour" class="panel-collapse collapse">
-		  <div class="panel-body">
-			<p>Word Cloud goes here</p>
-		  </div>
+		 	<div class="panel-body">
+			<div id="resBubble"></div>
+			</div>
 		</div>
 	  </div>
 	</div>
   </div>
   <script>
+//slider js
+var rangeSlider = function(){
+  var slider = $('.slider__range'),
+      range = $('.slider__range'),
+      value = $('.slider__value');
+  slider.each(function(){
+
+    value.each(function(){
+      var value = $(this).prev().attr('value');
+      $(this).html(value);
+    });
+
+    range.on('input', function(){
+      var value = this.value;
+      if(value > 50){
+        value = value - 50;
+        value = (value/100)
+        value += 0.5
+      }else if(value < 50){
+        value = ((50-value)/100);
+        value = -1 * value;
+        value -= 0.5
+      }else{
+        value = 0;
+      }
+      $("#sliderval").html(value.toFixed(2));
+      // $(this).prev(value).html(this.value);
+    });
+  });
+};
+
+rangeSlider();
+
+	$('.panel-collapse').on('show.bs.collapse', function () {
+		$(this).siblings('.panel-heading').addClass('active');
+	});
+
+	$('.panel-collapse').on('hide.bs.collapse', function () {
+		$(this).siblings('.panel-heading').removeClass('active');
+	});
+  
   var prev;
+  var min_rating=2.5
+  var min_sentiment=-1;
+  var selected="";
   var reviews_by_business;
+  var mexican_score=[];
+  var italian_score=[];
+  var pizza_score=[];
+  var coffeetea_score=[];
+  var burger_score=[];
+  var salad_score=[];
+
+  function filterSentiment(value)
+  {
+  	var val;
+  	if(value > 50)
+  	{
+    	val = value - 50;
+    	val = (val/100)
+    	val += 0.5
+  	}
+  	else if(val < 50)
+  	{
+    	val = ((50-val)/100);
+    	val = -1 * val;
+    	val -= 0.5
+  	}
+  	else
+  	{
+    	val = 0;
+  	}
+  	min_sentiment=val;
+
+  }
+
   // function over(id) {
   //   document.getElementById(id).innerHTML="You have hovered mouse over me";
   // }
@@ -334,7 +629,7 @@
 			  shadowSize: [41, 41]
 			});
 
-  function openNav(e, points)
+  function openNav(e, points, scores)
   {
 	var point = map.latLngToContainerPoint(e.latlng);
 	var stars = 0.0;
@@ -342,6 +637,7 @@
 	var hours = 'NA';
 	var address = 'NA';
 	var hoursdict = {};
+	var business_id;
 	for(var i = 0; i < points.length; i++) 
 	{
 		if(points[i].latlng[0] == e.latlng.lat && points[i].latlng[1] == e.latlng.lng) 
@@ -356,7 +652,9 @@
 			{
 			  hours = points[i].hours;
 			} 
-			
+			{
+				business_id=points[i].business_id;
+			}
 			// Processing data to get time based graph for ratings
 			for(id in reviews_by_business){
 				if(reviews_by_business[id].key==points[i].business_id){
@@ -368,65 +666,41 @@
 				}
 			}			
 			draw_rating_time_chart(star_chart_data);
+			draw_occupancy_chart(points[i].occupancies);   
+			break;
 		}
 	}
 
-	if(hours != 'NA') {
-	  hours = hours.replace("{", "");
-	  hours = hours.replace("}", "");
-	  hours = hours.split(",");
-	  for(var i = 0; i < hours.length; i++) {
-		if(hours[i].includes('Monday')) {
-		  hoursdict['Monday'] = hours[i].split(": ")[1].split("'")[1];
-		}else if(hours[i].includes('Tuesday')) {
-		  hoursdict['Tuesday'] = hours[i].split(": ")[1].split("'")[1];
-		}else if(hours[i].includes('Wednesday')) {
-		  hoursdict['Wednesday'] = hours[i].split(": ")[1].split("'")[1];
-		}else if(hours[i].includes('Thursday')) {
-		  hoursdict['Thursday'] = hours[i].split(": ")[1].split("'")[1];
-		}else if(hours[i].includes('Friday')) {
-		  hoursdict['Friday'] = hours[i].split(": ")[1].split("'")[1];
-		}else if(hours[i].includes('Saturday')) {
-		  hoursdict['Saturday'] = hours[i].split(": ")[1].split("'")[1];
-		}else {
-		  hoursdict['Sunday'] = hours[i].split(": ")[1].split("'")[1];
+	// Filtering Reviews for bubble chart
+	var bus_review="";
+	var word_array=[];
+	for(var i=0; i<scores.length;i++)
+	{	
+		if(business_id==scores[i].business_id)
+		{
+			bus_review=bus_review+" "+scores[i].text
 		}
-	  }
-	  hours = "<table>" +
-	  "<tr>" +
-	  "<th>Days</th>" +
-	  "<th>Hours</th>" +
-	  "</tr>" +
-	  "<tr>" +
-	  "<td>Monday</td>" +
-	  "<td>" + hoursdict['Monday'] + "</td>" +
-	  "</tr>" +
-	  "<tr>" +
-	  "<td>Tuesday</td>" +
-	  "<td>" + hoursdict['Tuesday'] + "</td>" +
-	  "</tr>" +
-	  "<tr>" +
-	  "<td>Wednesday</td>" +
-	  "<td>" + hoursdict['Wednesday'] + "</td>" +
-	  "</tr>" +
-	  "<tr>" +
-	  "<td>Thursday</td>" +
-	  "<td>" + hoursdict['Thursday'] + "</td>" +
-	  "</tr>" +
-	  "<tr>" +
-	  "<td>Friday</td>" +
-	  "<td>" + hoursdict['Friday'] + "</td>" +
-	  "</tr>" +
-	  "<tr>" +
-	  "<td>Saturday</td>" +
-	  "<td>" + hoursdict['Saturday'] + "</td>" +
-	  "</tr>" +
-	  "<tr>" +
-	  "<td>Sunday</td>" +
-	  "<td>" + hoursdict['Sunday'] + "</td>" +
-	  "</tr>" +
-	  "</table>";
 	}
+	word_array=bus_review.split(" ");
+	var freqMap ={};
+	if(word_array.length>1)
+	{
+		console.log(word_array);
+		for(var i=0;i<word_array.length;i++)
+		{	
+			if(word_array[i].trim()!="")	
+			{
+				if (!freqMap[word_array[i]]) {
+	            	freqMap[word_array[i]] = 0;
+	        	}
+	        	freqMap[word_array[i]] += 1;
+		
+			}
+		}
+		console.log(word_array);
+		bubblechart(700,freqMap);
+	} 
+
 
 	var nameHtml = name;
 	var addressHtml = address;
@@ -439,14 +713,18 @@
 	if(stars-Math.floor(stars) == 0){
 	  isInt = true;
 	}
-	var i = 1
+	var i = 1;
 	for(; i <= Math.floor(stars); i++){
-	  starHtml = starHtml + "<span class=\"star on\"></span>";
+	  // starHtml = starHtml + "<span class=\"star on\"></span>";
+    starHtml = starHtml + "<span><img src=\"https://img.icons8.com/office/20/000000/filled-star.png\"></span>"
 	}
 	i--;
 	if(!isInt){
-	  starHtml = starHtml + "<span class=\"star half\"></span>";
+	  // starHtml = starHtml + "<span class=\"star half\"></span>";
+    starHtml = starHtml + "<span><img src=\"https://img.icons8.com/office/20/000000/star-half-empty.png\"></span>";
 	}
+
+  	starHtml = "Ratings"+"<span style='margin-left:10px'>"+starHtml+"</span>";
 
 	d3.select("#resName").html("<span style='color:red;font-weight:bold'>"+nameHtml+"</span><br/>").attr("fill", "red");
 	d3.select("#resAddress").html(addressHtml);
@@ -455,16 +733,299 @@
 
   }
 
-  function popupContent(e, points){
+ // create popup content
+  function popupContent(e, points, score_points){
 	var name, stars;
 	for(var i = 0; i < points.length; i++) {
 	  if(points[i].latlng[0] == e.latlng.lat && points[i].latlng[1] == e.latlng.lng) {
 		name = points[i].name;
 		stars = points[i].stars;
+		break;
 	  }
 	}
-	var html = "<div><span style='color:red;font-weight:bold'>" + name + "</span><br/>" + "<span><b> Rating: </b>" + stars + "</span><br/></div>";
-	return html;
+
+	var valid_points=[];
+
+	//get all valid points in map
+	for(var i = 0; i < points.length; i++) {
+	  	if( points[i].latlng[0] > map.getBounds().getSouth() && 
+	  		points[i].latlng[0] < map.getBounds().getNorth() &&
+            points[i].latlng[1] < map.getBounds().getEast() && 
+            points[i].latlng[1] > map.getBounds().getWest()){
+
+	  		for(var j=0;j<score_points.length;j++)
+	  		{
+	  			var bus_score=0;
+	  			if(score_points[j].business_id==points[i].business_id)
+	  			{
+	  				if(selected=="all")
+	  				{
+	  					bus_score=score_points[j].overall_score;
+	  				}
+	  				else
+	  				{
+	  					bus_score=score_points[j].overall_category_score;
+	  				}
+	  				break;
+	  			}
+	  		}
+
+			valid_points.push(
+			{
+				name: points[i].name,
+				address: points[i].address,
+				hours: points[i].hours,
+				latlng: points[i].latlng, 
+				stars: points[i].stars, 
+				score: bus_score,
+			});
+		}
+	}
+
+	valid_points.sort(function(x, y)
+	{
+		 return d3.ascending(x.stars, y.stars);
+	})
+
+	for(var i=0;i<valid_points.length;i++)
+	{
+		valid_points[i].ctr=i;
+	}
+
+
+	d3.select("star_dist_svg").remove();
+	d3.select("senti_dist_svg").remove();
+
+	var p_div_width = 350;
+	var p_div_height = 350;
+
+	var popup_div = d3.create("div")
+						.attr('class','popup_div')
+						.style('width',p_div_width + "px")
+						.style('height', p_div_height + "px");
+	
+	var margin = {top: 20, right: 20, bottom: 30, left: 40}
+	, width = p_div_width - margin.left-margin.right
+	, height = 130 - margin.top - margin.bottom; 
+	
+	//--------------------------------------------------------------------------------------
+	// Calculate Average Rating
+	var res_heading = popup_div.append("div");
+   	var resto_name = res_heading.append("text")
+				  				.attr("class", "ResHeading")
+					            .attr("fill","#909497")
+				            	.attr("font-family","Krub")
+				            	.attr("font-size", "14px")
+				            	.attr("font-weight", "bold") 
+					            .attr("x",10+ "px")
+					            .attr("y", 10+"px")
+					            .style('text-align','center')
+					            .style("text-anchor", "middle")
+					            .text(name);
+
+
+	var star_heading = popup_div.append("div");
+   	var star_chart_heading = star_heading.append("text")
+				  				.attr("class", "starBarChartHeading")
+					            .attr("fill","#909497")
+				            	.attr("font-family","Krub")
+				            	.attr("font-size", "12px")
+				            	.attr("font-weight", "bold") 
+					            .attr("x",10+ "px")
+					            .attr("y", 10+"px")
+					            .style('text-align','center')
+					            .style("text-anchor", "middle")
+					            .text("Star Rating w.r.t Overall Distribution");
+
+	var star_dist_svg = star_heading.append("svg")
+		.style('top', margin.top)
+		.style('left', '30px')
+		.attr("width", width+margin.left+margin.right+ "px")
+		.attr("height", height + margin.top + margin.bottom)
+
+	var g_star=star_dist_svg.append("g")
+		.attr("transform","translate("+[margin.left,margin.top]+")");
+	
+	var xScale_star = d3.scaleLinear()
+		.domain([0, valid_points.length]) // input
+		.range([0, width]); // output
+
+	var yScale_star = d3.scaleLinear()
+		.domain([0, 5]) // input 
+		.range([height, 0]); // output 
+
+	var xAxis = d3.axisBottom(xScale_star).tickSize(2).ticks(3);
+
+	var yAxis = d3.axisLeft(yScale_star).tickSize(2).ticks(3).tickFormat(d3.format(',.1f'));
+
+	g_star.append("g")
+		.attr("class", "axis")
+		.attr("transform", "translate(0," + height + ")")
+		.call(xAxis);
+
+	g_star.append("g")
+		.attr("class", "axis")
+		.call(yAxis);
+
+	var bar_width = 0.9*(((width)/(valid_points.length+5)));
+
+	var rects = g_star.selectAll("rect")
+    	.data(valid_points)
+    	.enter()
+    	.append("rect")
+	    .attr("y",height)
+	    .attr("height",0)
+	    .attr("width", bar_width)
+	    .attr("x", function(d,i) { return xScale_star(d.ctr); })
+	    .attr("fill",function(d,i){
+	    	if(d.latlng[0] == e.latlng.lat && d.latlng[1] == e.latlng.lng)
+			{ 	
+				return "#e67e22";
+			}
+			else
+			{
+				return "#dfe4ea";
+			}
+		})
+	    .transition()
+	    .attr("height", function(d) { return height-yScale_star(d.stars); })
+	    .attr("y", function(d) { return yScale_star(d.stars); })
+	    .duration(1000);
+
+	// text label for the x axis
+	star_dist_svg.append("text")
+    	.attr("font-family","Krub")
+    	.attr("font-size", "8px")
+    	.attr("font-weight", "bold") 
+    	.attr("fill","#909497")      
+    	.attr("transform",
+        "translate(" + (width/2) + " ," + 
+        175+ ")")
+      	.style("text-anchor", "middle")
+      	.text("Distribution Of Restaurants");
+
+    // text label for the y axis
+  	star_dist_svg.append("text")
+  	    .attr("font-family","Krub")
+    	.attr("font-size", "8px") 
+    	.attr("font-weight", "bold")
+    	.attr("fill","#909497")  
+      	.attr("transform", "rotate(-90)")
+      	.attr("y", 0)
+      	.attr("x", -70)
+      	.attr("dy", "1em")
+      	.style("text-anchor", "middle")
+      	.text("Rating");
+
+	//--------------------------------------------------------------------------------------
+	// Calculate Average Sentiment  
+
+	valid_points.sort(function(x, y)
+	{
+		 return d3.ascending(x.score, y.score);
+	})
+
+	for(var i=0;i<valid_points.length;i++)
+	{
+		valid_points[i].ctr=i;
+	}
+
+	var senti_heading = popup_div.append("div");
+
+	var sentiment_chart_heading = senti_heading.append("text")
+			  				.attr("class", "sentiBarChartHeading")
+				            .attr("fill","#909497")
+			            	.attr("font-family","Krub")
+			            	.attr("font-size", "12px")
+			            	.attr("font-weight", "bold")
+				            .style("text-anchor", "middle")
+				            .attr("x",20+ "px")
+				            .attr("y",height+margin.top+margin.bottom+50+"px")
+				            .text("Sentiment w.r.t Overall Distribution");  
+
+	var senti_dist_svg = senti_heading.append("svg")
+		.style('position','absolute')
+		.style('top', 150 )
+		.style('left', '30px')
+		.attr("width", width+margin.left+margin.right)
+		.attr("height", height+margin.top+margin.bottom)
+
+	var g_senti=senti_dist_svg.append("g")
+		.attr("transform","translate("+[margin.left,margin.top]+")");
+	
+	var xScale_senti = d3.scaleLinear()
+		.domain([0, valid_points.length]) // input
+		.range([0, width]); // output
+
+	var yScale_senti = d3.scaleLinear()
+		.domain([-1.5, 1.5]) // input 
+		.range([height, 0]); // output 
+
+	var xAxis = d3.axisBottom(xScale_senti).tickSize(2).ticks(3);
+
+	var yAxis = d3.axisLeft(yScale_senti).tickSize(2).ticks(3).tickFormat(d3.format(',.1f'));
+
+	g_senti.append("g")
+		.attr("class", "axis")
+		.attr("transform", "translate(0," + height + ")")
+		.call(xAxis);
+
+	g_senti.append("g")
+		.attr("class", "axis")
+		.call(yAxis);
+
+	var bar_width = 0.9*(((width)/(valid_points.length+5)));
+
+	var rects = g_senti.selectAll("rect")
+    	.data(valid_points)
+    	.enter()
+    	.append("rect")
+	    .attr("y",height)
+	    .attr("height",0)
+	    .attr("width", bar_width)
+	    .attr("x", function(d,i) { return xScale_senti(d.ctr); })
+	    .attr("fill",function(d,i){
+	    	if(d.latlng[0] == e.latlng.lat && d.latlng[1] == e.latlng.lng)
+			{ 	
+				return "#e67e22";
+			}
+			else
+			{
+				return "#dfe4ea";
+			}
+		})
+	    .transition()
+	    .attr("height", function(d) { return height-yScale_senti(d.score); })
+	    .attr("y", function(d) { return yScale_senti(d.score); })
+	    .duration(1000);
+
+	// text label for the x axis
+	senti_dist_svg.append("text")
+    	.attr("font-family","Krub")
+    	.attr("font-size", "8px")
+    	.attr("font-weight", "bold") 
+    	.attr("fill","#909497")      
+    	.attr("transform",
+        "translate(" + (width/2) + " ," + 
+        175+ ")")
+      	.style("text-anchor", "middle")
+      	.text("Distribution Of Restaurants");
+
+    // text label for the y axis
+  	senti_dist_svg.append("text")
+  	    .attr("font-family","Krub")
+    	.attr("font-size", "8px") 
+    	.attr("font-weight", "bold")
+    	.attr("fill","#909497")  
+      	.attr("transform", "rotate(-90)")
+      	.attr("y", 0)
+      	.attr("x", -70)
+      	.attr("dy", "1em")
+      	.style("text-anchor", "middle")
+      	.text("Sentiment Score");
+
+
+	return popup_div.node();
   }
 
   function onMouseOut(e){
@@ -472,33 +1033,130 @@
   }
 
   Promise.all([
-	d3.csv("data/top_10_mexican_restaurants.csv"),
-	d3.csv("data/top_10_italian_restaurants.csv"),
-	d3.csv("data/top_10_pizza_restaurants.csv"),
-	d3.csv("data/top_10_burger_restaurants.csv"),
-	d3.csv("data/top_10_coffeetea_restaurants.csv"),
-	d3.csv("data/top_10_salad_restaurants.csv"),
-	d3.csv("data/reviews_phoenix.csv")
+	d3.csv("data/all_mexican_restaurants.csv"),
+	d3.csv("data/all_italian_restaurants.csv"),
+	d3.csv("data/all_pizza_restaurants.csv"),
+	d3.csv("data/all_burger_restaurants.csv"),
+	d3.csv("data/all_coffeetea_restaurants.csv"),
+	d3.csv("data/all_salad_restaurants.csv"),
+	d3.csv("data/reviews_phoenix.csv"),
+	d3.csv("data/Mexican_score.csv"),
+	d3.csv("data/Italian_score.csv"),
+	d3.csv("data/Pizza_score.csv"),
+	d3.csv("data/Burgers_score.csv"),
+	d3.csv("data/Coffee&Tea_score.csv"),
+	d3.csv("data/Salad_score.csv")
   ]).then(function(files) 
-  {
-	  document.getElementById("mySidepanel").style.width = "25%";
-	  
-	  function renderData(data) {
+  {	
+  		
+	  	// setting width of side panel
+	  	document.getElementById("mySidepanel").style.width = "50%";
+		
+		mexican_score=files[7];
+		italian_score=files[8];
+		pizza_score=files[9];
+		burger_score=files[10];
+		coffeetea_score=files[11];
+		salad_score=files[12];
+
+	function renderData(data,sel_val) {
 		var isClicked = false;
 		var points = [];
+		var score_points=[];
+
+		selected = sel_val;
+		// get mexican scores
+		if(selected=="mexican"||selected=="all")
+		{
+			for(var j=0;j<mexican_score.length;j++)
+			{
+				score_points.push({
+					business_id:mexican_score[j].business_id,
+					review_id:mexican_score[j].review_id,
+					text:mexican_score[j].text,
+					overall_score:mexican_score[j].polarity,
+					overall_category_score:mexican_score[j].mexican_total_business_score,
+					category_score:mexican_score[j].mexican_sentiscore	
+				});
+			}
+		}
+		// get italian scores
+		if(selected=="italian"||selected=="all")
+		{
+			for(var j=0;j<italian_score.length;j++)
+			{
+				score_points.push({
+					business_id:italian_score[j].business_id,
+					review_id:italian_score[j].review_id,
+					text:italian_score[j].text,
+					overall_score:italian_score[j].polarity,
+					overall_category_score:italian_score[j].italian_total_business_score,
+					category_score:italian_score[j].italian_sentiscore	
+				});
+			}
+		}
+		// get pizza scores
+		if(selected=="pizza"||selected=="all")
+		{
+			for(var j=0;j<pizza_score.length;j++)
+			{
+				score_points.push({
+					business_id:pizza_score[j].business_id,
+					review_id:pizza_score[j].review_id,
+					text:pizza_score[j].text,
+					overall_score:pizza_score[j].polarity,
+					overall_category_score:pizza_score[j].pizza_total_business_score,
+					category_score:pizza_score[j].pizza_sentiscore	
+				});
+			}
+		}
+		// get burger scores
+		if(selected=="burger"||selected=="all")
+		{
+			for(var j=0;j<burger_score.length;j++)
+			{
+				score_points.push({
+					business_id:burger_score[j].business_id,
+					review_id:burger_score[j].review_id,
+					text:burger_score[j].text,
+					overall_score:burger_score[j].polarity,
+					overall_category_score:burger_score[j].burger_total_business_score,
+					category_score:burger_score[j].burger_sentiscore	
+				});
+			}
+		}
+		// get coffeetea scores
+		if(selected=="coffeetea"||selected=="all")
+		{
+			for(var j=0;j<coffeetea_score.length;j++)
+			{
+				score_points.push({
+					business_id:coffeetea_score[j].business_id,
+					review_id:coffeetea_score[j].review_id,
+					text:coffeetea_score[j].text,
+					overall_score:coffeetea_score[j].polarity,
+					overall_category_score:coffeetea_score[j].coffeetea_total_business_score,
+					category_score:coffeetea_score[j].coffeetea_sentiscore	
+				});
+			}
+		}
 
 		for(var i = 0; i < data.length; i++) {
-		  points.push(
+			if(data[i].stars>=min_rating)
 			{
-			  name: data[i].name,
-			  address: data[i].address,
-			  hours: data[i].hours,
-			  latlng: [data[i].latitude, data[i].longitude],
-			  stars: data[i].stars,
-			  date: data[i].date,
-			  // need business id              
-			  business_id: data[i].business_id
-			});
+				points.push(
+				{
+					name: data[i].name,
+				  	address: data[i].address,
+				  	hours: data[i].hours,
+				  	latlng: [data[i].latitude, data[i].longitude],
+				  	stars: data[i].stars,
+				  	date: data[i].date,
+	        		occupancies: data[i].Occupancies,
+				  	// need business id              
+			  		business_id: data[i].business_id
+				});
+			}
 		}
 
 		map.removeLayer(markerClusters);
@@ -513,7 +1171,7 @@
 		  .addTo(pointsGroup)
 		  .on("click", clickFunc)
 		  .on('mouseover', function (e) {
-			  this.bindPopup(popupContent(e, points));
+			  this.bindPopup(popupContent(e, points, score_points),{maxWidth:500});
 			  this.openPopup();
 		  });
 		  markerClusters.addLayer(marker);
@@ -524,8 +1182,8 @@
 		map.addLayer(markerClusters);
 		
 		function clickFunc(p){
-		  document.getElementById("mySidepanel").style.width = "25%";
-		  openNav(p, points);
+		  document.getElementById("mySidepanel").style.width = "50%";
+		  openNav(p, points,score_points);
 		  //This part of code turns previous restaurant icon back to blue
 		  if(prev){
 			prev.target.setIcon(unactiveIcon);
@@ -545,66 +1203,305 @@
 		.entries(review_data);
 
 	  var data = files[0];
-	  for(var i = 1; i < files.length-1; i++) {
+	  for(var i = 1; i < 6; i++) {
 		data = data.concat(files[i]);
 	  }
-	  renderData(data);
+	  renderData(data,"all");
 	  $("#all").click(function() {
 		var data = files[0];
-		for(var i = 1; i < files.length-1; i++) {
+		for(var i = 1; i < 6; i++) {
 		  data = data.concat(files[i]);
+		
 		}
-		renderData(data);
+		renderData(data,"all");
 	  });
 	  $("#mexican").click(function() {
 		data = files[0];
-		renderData(data);
+		renderData(data,"mexican");
 	  });
 	  $("#italian").click(function() {
 		data = files[1];
-		renderData(data);
+		renderData(data,"italian");
 	  });
 	  $("#pizza").click(function() {
 		data = files[2];
-		renderData(data);
+		renderData(data,"pizza");
 	  });
 	  $("#burger").click(function() {
 		data = files[3];
-		renderData(data);
+		renderData(data,"burger");
 	  });
 	  $("#coffeetea").click(function() {
 		data = files[4];
-		renderData(data)
+		renderData(data,"coffeetea")
 	  });
 	  $("#salad").click(function() {
 		data = files[5];
-		renderData(data);
+		renderData(data,"salad");
+	  });
+	  $('#ratingsInput input').change(function() {
+ 		min_rating = (document.querySelector('input[name = "rating"]:checked').value)/2;
+ 		renderData(data,selected)
 	  });
 	}).catch(function(err) {
 	  // handle error here
   });
 
+function bubblechart(diameter, datadict){
+
+      var max = 0;
+
+      console.log(datadict);
+
+    values=[];
+
+	for(var key in datadict) {
+  		var value = datadict[key];
+  		if (value>max && key!="")
+  		{
+  			max=value;
+  			values.push({
+  				Name:key,
+  				Count:value
+  			});
+  		}
+  	}
+
+  	dataset=[];
+  	dataset.push({
+  		children:values
+  	})
+
+      var color = d3.scaleOrdinal(d3.schemeCategory10);
+
+      d3.select("#resBubble").html("");
+
+      var svg = d3.select("#resBubble")
+      .append("svg")
+      .attr("width", diameter)
+      .attr("height", diameter)
+      .style("display","block")
+      .style("margin","auto")
+      .attr("class", "bubble");
+
+      var bubble = d3.pack(dataset)
+      .size([diameter, diameter])
+      .padding(1.5);
+
+      var nodes = d3.hierarchy(dataset)
+      .sum(function(d) { return d.Count; });
+
+      var node = svg.selectAll(".node")
+      .data(bubble(nodes).descendants())
+      .enter()
+      .filter(function(d){
+        return  !d.children
+      })
+      .append("g")
+      .attr("class", "node")
+      .attr("transform", function(d) {
+        return "translate(" + d.x + "," + d.y + ")";
+      });
+
+      node.append("title")
+      .text(function(d) {
+        return d.Name + ": " + d.Count;
+      });
+
+      node.append("circle")
+      .attr("r", function(d) {
+        return d.r;
+      })
+      .style("fill", function(d,i) {
+        return color(i);
+      });
+
+      node.append("text")
+      .attr("dy", ".2em")
+      .style("text-anchor", "middle")
+      .text(function(d) {
+        return d.data.Name.substring(0, d.r / 3);
+      })
+      .attr("font-family", "sans-serif")
+      .attr("font-size", function(d){
+        return d.r/5;
+      })
+      .attr("fill", "white");
+
+      node.append("text")
+      .attr("dy", "1.3em")
+      .style("text-anchor", "middle")
+      .text(function(d) {
+        return d.data.Count;
+      })
+      .attr("font-family",  "Gill Sans", "Gill Sans MT")
+      .attr("font-size", function(d){
+        return d.r/5;
+      })
+      .attr("fill", "white");
+
+      d3.select(self.frameElement)
+      .style("height", diameter + "px");
+    }
+
+function draw_occupancy_chart(occupancy_data){
+    d3.select(".occupancy_chart").remove();
+    
+    var div_width = (document.getElementById("mySidepanel").offsetWidth )-40;
+    var div_height = 200;
+
+    var margin = {top: 25, right: 50, bottom: 10, left: 50}
+    , width = div_width - margin.left - margin.right  
+    , height = div_height - margin.top - margin.bottom; 
+    
+    var svg = d3.select("#occupancy_chart").append("svg")
+      .attr("class","occupancy_chart")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom+50)
+      .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+    var x = d3.scaleBand().rangeRound([0, width - 100]).padding(0.5),
+    y = d3.scaleLinear().rangeRound([height, 0]);
+
+    var g = svg.append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    const div = d3
+      .select('body')
+      .append('div')
+      .attr('class', 'tooltip')
+      .style('opacity', 0);
+
+    var occ_data = occupancy_data.replace("{", "").replace("}", "").split(', ');
+    var days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    var footfall = [0, 0, 0, 0, 0, 0, 0];
+    for(var i = 0; i < occ_data.length; i++) {
+      if(occ_data[i].split(': ')[0].replace("'", "").replace("'", "") == 'Monday') {
+        footfall[0] = parseInt(occ_data[i].split(': ')[1]);
+      } else if(occ_data[i].split(': ')[0].replace("'", "").replace("'", "") == 'Tuesday') {
+        footfall[1] = parseInt(occ_data[i].split(': ')[1]);
+      } else if(occ_data[i].split(': ')[0].replace("'", "").replace("'", "") == 'Wednesday') {
+        footfall[2] = parseInt(occ_data[i].split(': ')[1]);
+      } else if(occ_data[i].split(': ')[0].replace("'", "").replace("'", "") == 'Thursday') {
+        footfall[3] = parseInt(occ_data[i].split(': ')[1]);
+      } else if(occ_data[i].split(': ')[0].replace("'", "").replace("'", "") == 'Friday') {
+        footfall[4] = parseInt(occ_data[i].split(': ')[1]);
+      } else if(occ_data[i].split(': ')[0].replace("'", "").replace("'", "") == 'Saturday') {
+        footfall[5] = parseInt(occ_data[i].split(': ')[1]);
+      } else {
+        footfall[6] = parseInt(occ_data[i].split(': ')[1]);
+      }
+    }
+
+    var data = [];
+    var sum = 0;
+    for(var i = 0; i < footfall.length; i++) {
+      sum += footfall[i];
+    }
+    for(var i = 0; i < days.length; i++) {
+      data.push({ "day": days[i], "footfall": (footfall[i] * 1.0) / sum });
+    }
+
+    x.domain(data.map(function(d) { return d.day; }));
+    y.domain([0, d3.max(data, function(d) { return d.footfall; })]);
+
+
+    svg.append("text")
+      .attr("class", "chartHeading")
+      .attr("x", 0.5*width)
+      .attr("y", -10)
+      .style("text-anchor", "middle")
+      .attr("fill","#909497")
+      .attr("font-family","Krub")
+      .attr("font-size", "12px")
+      .attr("font-weight", "bold") 
+      .text("Footfall Distribution over a week");
+
+    svg.append("text")
+      .attr("font-family","Krub")
+      .attr("font-size", "12px")
+      .attr("font-weight", "bold") 
+      .attr("fill","#909497")      
+      .attr("transform",
+        "translate(" + (width/2) + " ," + 
+        (height+55) + ")")
+        .style("text-anchor", "middle")
+        .text("Days");
+
+    svg.append("text")
+        .attr("font-family","Krub")
+        .attr("font-size", "12px") 
+        .attr("font-weight", "bold")
+        .attr("fill","#909497")  
+        .attr("transform", "rotate(-90)")
+        .attr("y",-50)
+        .attr("x",0 - (height / 2))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text("Percentage Distribution");
+
+    g.append("g")
+        .attr("class", "axis axis--y")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x));
+
+    g.append("g")
+        .attr("class", "axis axis--y")
+        .call(d3.axisLeft(y).ticks(5, "%"))
+        .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dy", "0.50em")
+        .attr("text-anchor", "end")
+        .text("Frequency");
+
+    g.selectAll(".bar")
+      .data(data)
+      .enter().append("rect")
+        .attr("class", "bar")
+        .attr("x", function(d) { return x(d.day); })
+        .attr("y", function(d) { return y(d.footfall); })
+        .attr("width", x.bandwidth())
+        .attr("height", function(d) { return height - y(d.footfall); })
+        .on('mouseover', d => {
+          div
+            .transition()
+            .duration(200)
+            .style('opacity', 0.9);
+          div
+            .html(d.day + '<br>' + (d.footfall * 100).toFixed(2) + '%')
+            .style('left', d3.event.pageX + 'px')
+            .style('top', d3.event.pageY - 28 + 'px');
+        })
+        .on('mouseout', () => {
+          div
+            .transition()
+            .duration(500)
+            .style('opacity', 0);
+        });
+  }
+
 	// function to draw time rating chart
 	function draw_rating_time_chart(rating_data){
 
-		d3.select("svg").remove();
+		d3.selectAll(".rating_svg").remove();
 
 		if(rating_data)
 		{
-			console.log(rating_data[0].date);
-			console.log(rating_data[rating_data.length - 1].date);
-
-			var div_width = (document.getElementById("mySidepanel").offsetWidth )-40;
-			var div_height = 150;
+			var rt_div_width = (document.getElementById("mySidepanel").offsetWidth )-40;
+			var rt_div_height = 300;
 
 			var min_date = new Date(rating_data[0].date);
 			var max_date = new Date(rating_data[rating_data.length - 1].date);
 
 			var margin = {top: 25, right: 50, bottom: 10, left: 50}
-			, width = div_width - margin.left - margin.right  
-			, height = div_height - margin.top - margin.bottom; 
+			, width = rt_div_width - margin.left - margin.right  
+			, height = rt_div_height - margin.top - margin.bottom; 
 			
-			var svg = d3.select("#rating_time_chart").append("svg")
+			var rating_svg = d3.select("#rating_time_chart").append("svg")
+				.attr("class","rating_svg")
 				.attr("width", width + margin.left + margin.right)
 				.attr("height", height + margin.top + margin.bottom+50)
 				.append("g")
@@ -622,11 +1519,11 @@
 				.x(function(d, i) { return xScale(new Date(d.date)); }) 
 				.y(function(d) { return yScale(d.stars); }) 
 
-			var xAxis = d3.axisBottom(xScale).tickSize(3).ticks(5);
+			var xAxis = d3.axisBottom(xScale).tickSize(1).ticks(5);
   
-  			var yAxis = d3.axisLeft(yScale).tickSize(3).ticks(5);
+  			var yAxis = d3.axisLeft(yScale).tickSize(1).ticks(5);
 
-  			svg.append("text")
+  			rating_svg.append("text")
   				.attr("class", "chartHeading")
 	            .attr("x", 0.5*width)
 	            .attr("y", -10)
@@ -637,17 +1534,17 @@
             	.attr("font-weight", "bold") 
 	            .text("Evolution Of Rating w.r.t Time");
 
-			svg.append("g")
+			rating_svg.append("g")
 				.attr("class", "axis")
 				.attr("transform", "translate(0," + height + ")")
 				.call(xAxis);
 
-			svg.append("g")
+			rating_svg.append("g")
 				.attr("class", "axis")
 				.call(yAxis);
 
 			// text label for the x axis
-  			svg.append("text")
+  			rating_svg.append("text")
             	.attr("font-family","Krub")
             	.attr("font-size", "12px")
             	.attr("font-weight", "bold") 
@@ -659,7 +1556,7 @@
 		      	.text("Date");
 
 		    // text label for the y axis
-		  	svg.append("text")
+		  	rating_svg.append("text")
 		  	    .attr("font-family","Krub")
             	.attr("font-size", "12px") 
             	.attr("font-weight", "bold")
@@ -671,14 +1568,15 @@
 		      	.style("text-anchor", "middle")
 		      	.text("Rating");
 
-			svg.append("path")
+			rating_svg.append("path")
 			    .datum(rating_data) // 10. Binds data to the line 
 			    .style("fill","none")
 			    .style("stroke","#e67e22" )
+			    .style("stroke-width", 2)
 			    .attr("class", "line") // Assign a class for styling 
 			    .attr("d", line); // 11. Calls the line generator 	
 
-			svg.selectAll(".dot")
+			rating_svg.selectAll(".dot")
 		    	.data(rating_data)
 		  		.enter().append("circle") // Uses the enter().append() method
 		    	.attr("class", "dot") // Assign a class for styling
@@ -687,12 +1585,12 @@
 		    	.attr("cy", function(d) {
 		    		return yScale(d.stars) 
 		    	})
-		    	.attr("r",2)
+		    	.attr("r",4)
 		    	.style("fill","#e67e22")
 		      	.on("mouseover", function(d) {
-		      		d3.select(this).attr("r",4);
+		      		d3.select(this).attr("r", 8);
 					
-					svg.append("line")
+					rating_svg.append("line")
         				.attr('class','joinLine')
                     	.attr("x1", xScale(new Date(d.date)))
                     	.attr("y1", yScale(d.stars))
@@ -702,7 +1600,7 @@
 	                    .attr("stroke-dasharray", "2 2")
 	                    .attr("stroke", "#909497");
 
-					svg.append("line")
+					rating_svg.append("line")
         				.attr('class','joinLine')
                     	.attr("x1", xScale(new Date(d.date)))
                     	.attr("y1", yScale(0))
@@ -714,7 +1612,7 @@
 
 	                var cur_date = d.date.toString();
 
-	                svg.append("text")
+	                rating_svg.append("text")
 			            .attr("class", "joinLine")
 			            .attr("x", xScale(new Date(d.date)))
 			            .attr("y", yScale(0)+25)
@@ -727,8 +1625,8 @@
                     	
 				})
 		      	.on("mouseout", function() { 
-		      		d3.select(this).attr("r",2);
-		      		svg.selectAll('.joinLine').remove(); 
+		      		d3.select(this).attr("r",4);
+		      		rating_svg.selectAll('.joinLine').remove(); 
 		       	})
 		}		
 
