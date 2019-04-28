@@ -230,6 +230,7 @@
     pointer-events: none;
   }
 
+
   </style>
 </head>
 <body>
@@ -259,17 +260,19 @@
       </div>
     </div>
     </div>
-    <div class="panel panel-default">
+    <!-- <div class="panel panel-default">
     <div class="panel-heading">
       <h4 class="panel-title">
       <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">Timings</a>
       </h4>
     </div>
     <div id="collapseOne" class="panel-collapse collapse">
+      <div class="panel-body">
       <div id ="resTimings" class="panel-body-un">
       </div>
-    </div>
-    </div>
+      <div id="timings_chart"></div>
+      </div>
+    </div> -->
     <div class="panel panel-default">
     <div class="panel-heading">
       <h4 class="panel-title">
@@ -430,7 +433,8 @@
           hoursdict['Sunday'] = hours[i].split(": ")[1].split("'")[1];
         }
       }
-      console.log(hoursdict);
+      // console.log(hoursdict);
+      draw_timings_chart(hoursdict);
       hours = "<table>" +
       "<tr>" +
       "<th>Days</th>" +
@@ -489,7 +493,7 @@
 
     d3.select("#resName").html("<span style='color:red;font-weight:bold'>"+nameHtml+"</span><br/>").attr("fill", "red");
     d3.select("#resAddress").html(addressHtml);
-    d3.select("#resTimings").html("<span>"+timingHtml+"</span>");
+    // d3.select("#resTimings").html("<span>"+timingHtml+"</span>");
     d3.select("#resRatings").html(starHtml);
 
   }
@@ -511,12 +515,12 @@
   }
 
   Promise.all([
-  d3.csv("data/top_10_mexican_restaurants.csv"),
-  d3.csv("data/top_10_italian_restaurants.csv"),
-  d3.csv("data/top_10_pizza_restaurants.csv"),
-  d3.csv("data/top_10_burger_restaurants.csv"),
-  d3.csv("data/top_10_coffeetea_restaurants.csv"),
-  d3.csv("data/top_10_salad_restaurants.csv"),
+  d3.csv("data/all_mexican_restaurants.csv"),
+  d3.csv("data/all_italian_restaurants.csv"),
+  d3.csv("data/all_pizza_restaurants.csv"),
+  d3.csv("data/all_burger_restaurants.csv"),
+  d3.csv("data/all_coffeetea_restaurants.csv"),
+  d3.csv("data/all_salad_restaurants.csv"),
   d3.csv("data/reviews_phoenix.csv")
   ]).then(function(files) 
   {
@@ -770,6 +774,10 @@
               svg.selectAll('.joinLine').remove(); 
             })
     }   
+
+  }
+
+  function draw_timings_chart(timings_data){
 
   }
 
