@@ -638,6 +638,7 @@ rangeSlider();
 	var address = 'NA';
 	var hoursdict = {};
 	var business_id;
+	var star_chart_data=[];
 	for(var i = 0; i < points.length; i++) 
 	{
 		if(points[i].latlng[0] == e.latlng.lat && points[i].latlng[1] == e.latlng.lng) 
@@ -655,16 +656,51 @@ rangeSlider();
 			{
 				business_id=points[i].business_id;
 			}
+			
+
 			// Processing data to get time based graph for ratings
-			for(id in reviews_by_business){
-				if(reviews_by_business[id].key==points[i].business_id){
-					var star_chart_data = reviews_by_business[id].values
-					star_chart_data = star_chart_data.sort(function(x, y){
-						return new Date(x.date) - new Date(y.date);
-					})
-					break;
-				}
-			}			
+			// for(id in reviews_by_business){
+			// 	if(reviews_by_business[id].key==points[i].business_id){
+			// 		console.log("inside");
+			// 		var star_chart_data = reviews_by_business[id].values
+			// 		star_chart_data = star_chart_data.sort(function(x, y){
+			// 			return new Date(x.date) - new Date(y.date);
+			// 		})
+			// 		break;
+			// 		console.log(star_chart_data);
+			// 		draw_rating_time_chart(star_chart_data);
+			// 	}
+			// }			
+			reviews_by_business = d3.nest()
+				.key(function(d) { return d.business_id; })
+				.key(function(d){ return d.review_id; })
+				.entries(scores);
+			for(id in reviews_by_business)
+			{
+				if (reviews_by_business[id].key==business_id)
+					for(rev_id in reviews_by_business[id].values)
+					{
+						console.log(reviews_by_business[id].values[rev_id].values);
+						if(reviews_by_business[id].values[rev_id].values.length==1)
+						{
+							star_chart_data.push({
+								date:reviews_by_business[id].values[rev_id].values.date,
+								stars:reviews_by_business[id].values[rev_id].values.stars
+							});
+						}
+						else
+						{
+							star_chart_data.push({
+								date:reviews_by_business[id].values[rev_id].values[0].date,
+								stars:reviews_by_business[id].values[rev_id].values[0].stars
+							});
+						}
+
+					}		
+					console.log(star_chart_data);
+					break;																														
+			}
+
 			draw_rating_time_chart(star_chart_data);
 			draw_occupancy_chart(points[i].occupancies);   
 			break;
@@ -1040,15 +1076,14 @@ rangeSlider();
 	d3.csv("data/all_coffeetea_restaurants.csv"),
 	d3.csv("data/all_salad_restaurants.csv"),
 	d3.csv("data/reviews_phoenix.csv"),
-	d3.csv("data/Mexican_score.csv"),
-	d3.csv("data/Italian_score.csv"),
-	d3.csv("data/Pizza_score.csv"),
-	d3.csv("data/Burgers_score.csv"),
-	d3.csv("data/Coffee&Tea_score.csv"),
-	d3.csv("data/Salad_score.csv")
+	d3.csv("data/Mexican_s.csv"),
+	d3.csv("data/Italian_s.csv"),
+	d3.csv("data/Pizza_s.csv"),
+	d3.csv("data/Burgers_s.csv"),
+	d3.csv("data/Coffee&Tea_s.csv"),
+	d3.csv("data/Salad_s.csv")
   ]).then(function(files) 
   {	
-  		console.log("here");
   		
 	  	// setting width of side panel
 	  	document.getElementById("mySidepanel").style.width = "50%";
@@ -1073,6 +1108,7 @@ rangeSlider();
 			{
 				score_points.push({
 					business_id:mexican_score[j].business_id,
+					stars:mexican_score[j].stars,
 					review_id:mexican_score[j].review_id,
 					text:mexican_score[j].text,
 					overall_score:mexican_score[j].polarity,
@@ -1088,6 +1124,7 @@ rangeSlider();
 			{
 				score_points.push({
 					business_id:italian_score[j].business_id,
+					stars:italian_score[j].stars,
 					review_id:italian_score[j].review_id,
 					text:italian_score[j].text,
 					overall_score:italian_score[j].polarity,
@@ -1103,6 +1140,7 @@ rangeSlider();
 			{
 				score_points.push({
 					business_id:pizza_score[j].business_id,
+					stars:pizza_score[j].stars,
 					review_id:pizza_score[j].review_id,
 					text:pizza_score[j].text,
 					overall_score:pizza_score[j].polarity,
@@ -1118,6 +1156,7 @@ rangeSlider();
 			{
 				score_points.push({
 					business_id:burger_score[j].business_id,
+					stars:burger_score[j].stars,
 					review_id:burger_score[j].review_id,
 					text:burger_score[j].text,
 					overall_score:burger_score[j].polarity,
@@ -1133,6 +1172,7 @@ rangeSlider();
 			{
 				score_points.push({
 					business_id:coffeetea_score[j].business_id,
+					stars:coffeetea_score[j].stars,
 					review_id:coffeetea_score[j].review_id,
 					text:coffeetea_score[j].text,
 					overall_score:coffeetea_score[j].polarity,
@@ -1261,10 +1301,13 @@ function bubblechart(diameter, datadict){
   		if (value>max && key!="")
   		{
   			max=value;
-  			values.push({
-  				Name:key,
-  				Count:value
-  			});
+  			if(value>5)
+	  		{	
+	  			values.push({
+	  				Name:key,
+	  				Count:value
+	  			});
+  			}
   		}
   	}
 
@@ -1277,7 +1320,7 @@ function bubblechart(diameter, datadict){
 
       d3.select("#resBubble").html("");
 
-      var svg = d3.select("#resBubble")
+      var bubble_svg = d3.select("#resBubble")
       .append("svg")
       .attr("width", diameter)
       .attr("height", diameter)
@@ -1292,7 +1335,7 @@ function bubblechart(diameter, datadict){
       var nodes = d3.hierarchy(dataset)
       .sum(function(d) { return d.Count; });
 
-      var node = svg.selectAll(".node")
+      var node = bubble_svg.selectAll(".node")
       .data(bubble(nodes).descendants())
       .enter()
       .filter(function(d){
@@ -1311,7 +1354,10 @@ function bubblechart(diameter, datadict){
 
       node.append("circle")
       .attr("r", function(d) {
-        return d.r;
+      	if(d.r)
+        	return d.r;
+        else
+        	return 0;
       })
       .style("fill", function(d,i) {
         return color(i);
@@ -1321,7 +1367,10 @@ function bubblechart(diameter, datadict){
       .attr("dy", ".2em")
       .style("text-anchor", "middle")
       .text(function(d) {
-        return d.data.Name.substring(0, d.r / 3);
+      	if(d.data.Name)
+        	return d.data.Name.substring(0, d.r / 3);
+        else
+        	return "none"
       })
       .attr("font-family", "sans-serif")
       .attr("font-size", function(d){
@@ -1355,7 +1404,7 @@ function draw_occupancy_chart(occupancy_data){
     , width = div_width - margin.left - margin.right  
     , height = div_height - margin.top - margin.bottom; 
     
-    var svg = d3.select("#occupancy_chart").append("svg")
+    var occ_svg = d3.select("#occupancy_chart").append("svg")
       .attr("class","occupancy_chart")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom+50)
@@ -1366,7 +1415,7 @@ function draw_occupancy_chart(occupancy_data){
     var x = d3.scaleBand().rangeRound([0, width - 100]).padding(0.5),
     y = d3.scaleLinear().rangeRound([height, 0]);
 
-    var g = svg.append("g")
+    var g = occ_svg.append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     const div = d3
@@ -1409,7 +1458,7 @@ function draw_occupancy_chart(occupancy_data){
     y.domain([0, d3.max(data, function(d) { return d.footfall; })]);
 
 
-    svg.append("text")
+    occ_svg.append("text")
       .attr("class", "chartHeading")
       .attr("x", 0.5*width)
       .attr("y", -10)
@@ -1420,7 +1469,7 @@ function draw_occupancy_chart(occupancy_data){
       .attr("font-weight", "bold") 
       .text("Footfall Distribution over a week");
 
-    svg.append("text")
+    occ_svg.append("text")
       .attr("font-family","Krub")
       .attr("font-size", "12px")
       .attr("font-weight", "bold") 
@@ -1431,7 +1480,7 @@ function draw_occupancy_chart(occupancy_data){
         .style("text-anchor", "middle")
         .text("Days");
 
-    svg.append("text")
+    occ_svg.append("text")
         .attr("font-family","Krub")
         .attr("font-size", "12px") 
         .attr("font-weight", "bold")
@@ -1488,6 +1537,8 @@ function draw_occupancy_chart(occupancy_data){
 	function draw_rating_time_chart(rating_data){
 
 		d3.selectAll(".rating_svg").remove();
+
+		console.log(rating_data);
 
 		if(rating_data)
 		{
